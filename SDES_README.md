@@ -12,6 +12,7 @@
  - data: data files
  - script: bash scripts
  - del: deleted files
+ - refactor: code refactoring
 
  ## Overview
  This repository contains code for Symbolic Density Estimation (SDE) using Symbolic Regression techniques
