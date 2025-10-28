@@ -13,6 +13,7 @@
  - script: bash scripts
  - del: deleted files
  - refactor: code refactoring
+ - viz: visualization jupyter notebooks
 
  ## Overview
  This repository contains code for Symbolic Density Estimation (SDE) using Symbolic Regression techniques
