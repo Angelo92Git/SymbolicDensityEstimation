@@ -17,7 +17,6 @@ const CONFIG_sr = Dict(
     "niterations_for_joint_sr" => 8000,
     "num_populations_for_joint_sr" => 15,
     "population_size_for_joint_sr" => 30,
-    "joint_max_num_expressions" => 450, # use Inf to avoid limiting number of expressions
     "batching" => true,
     "batch_size" => 128,
     "progress" => false,
