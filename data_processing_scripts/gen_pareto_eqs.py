@@ -1,5 +1,6 @@
 import pandas as pd
 import pprint
+import os
 
 def main():
 
@@ -29,6 +30,7 @@ def main():
         loss = df['Loss'].tolist()
 
         output_filename = out_files[i]
+        os.makedirs(os.path.dirname(output_filename), exist_ok=True)
         # Open the file in write mode
         with open(output_filename, 'w') as f:
             # raw_equations
