@@ -1,4 +1,4 @@
-# python -m data_processing_scripts.dijet_gen_data.py
+# python -m data_processing_scripts.dijet_gen_data
 
 import numpy as np
 from sklearn.neighbors import KernelDensity
