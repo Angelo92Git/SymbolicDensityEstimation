@@ -11,4 +11,5 @@ julia --thread=64 sdes_pipeline.jl "dijet" "config_dijet" "false"
 # julia --thread=64 sdes_pipeline.jl "dijet" "config_debug" "false"
 
 # module load python/3.12
+# module load scipy-stack
 # srun --cpus-per-task=1 --mem=16G --time=01:00:00 --pty bash
