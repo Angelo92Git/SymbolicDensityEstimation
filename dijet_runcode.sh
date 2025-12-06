@@ -12,4 +12,6 @@ julia --thread=64 sdes_pipeline.jl "dijet" "config_dijet" "false"
 
 # module load python/3.12
 # module load scipy-stack
+# pip install KDEpy
+# pip install --upgrade KDEpy
 # srun --cpus-per-task=1 --mem=16G --time=01:00:00 --pty bash
