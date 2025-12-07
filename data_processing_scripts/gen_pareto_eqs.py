@@ -5,7 +5,7 @@ import os
 def main():
 
     df_paths = [
-        '../logs/cluster_dijet_log_20251114_195733/joint_no_init/20251114_195759_m4lxU4/hall_of_fame.csv',
+        '../logs/cluster_dijet_log_20251206_083931/joint_no_init/20251206_084008_WfYoSa/hall_of_fame.csv',
     ]
 
     post_fixes = [
