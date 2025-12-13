@@ -26,20 +26,15 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_shrink_offset=None):
+def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_shrink_offset=None, slices=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
-    ####### for cls
-    # slices = [slice(-12.0,4.0, jxbins), slice(-4.0, 12.0, jxbins)]
-    # slices = [slice(-4.0,12.0, jxbins), slice(-12.0, 4.0, jxbins)]
-    ### for cls_gm
-    # slices = [slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins)]
-    #######
-    if domain_extents is not None:
-        slices = [slice(domain_extents[i][0], domain_extents[i][1], jxbins) for i in range(d)]
-    else:
-        slices = [slice(np.min(samples[:, i])-grid_tolerance, np.max(samples[:, i])+grid_tolerance, jxbins) for i in range(d)]
+    if slices == None:
+        if domain_extents is not None:
+            slices = [slice(domain_extents[i][0], domain_extents[i][1], jxbins) for i in range(d)]
+        else:
+            slices = [slice(np.min(samples[:, i])-grid_tolerance, np.max(samples[:, i])+grid_tolerance, jxbins) for i in range(d)]
     grids = np.mgrid[tuple(slices)]
     grid_coords = np.vstack([[grids[i].ravel()] for i in range(d)]).T
     bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
@@ -70,7 +65,7 @@ def main():
         samples = (samples - samples_min) / (samples_max - samples_min)
     samples = DataConfig.scaling_factor * samples
     # Ensure the data is read correctly
-    generate_joint(samples, save_prefix=DataConfig.processed_data_prefix, kernel_type=DataConfig.kernel_type, bw_adj_joint=DataConfig.bw_adj_joint, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_shrink_offset=DataConfig.domain_shrink_offset)
+    generate_joint(samples, save_prefix=DataConfig.processed_data_prefix, kernel_type=DataConfig.kernel_type, bw_adj_joint=DataConfig.bw_adj_joint, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices)
     print("done!")
 
 if __name__ == "__main__":
