@@ -1,3 +1,5 @@
+# python -m data_processing_scripts.gen_data_bi_modal_2D_gaussian_mixture.py
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
