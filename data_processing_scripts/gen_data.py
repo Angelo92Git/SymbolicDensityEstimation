@@ -6,7 +6,7 @@ import numpy as np
 import scipy
 import pandas as pd
 from KDEpy import FFTKDE
-from config_management.data_config_dijet import DataConfig
+from config_management.data_config_2d_gaussian_cluster_2 import DataConfig
 from scipy.spatial import ConvexHull
 from shapely.geometry import Polygon, Point
 
@@ -26,7 +26,7 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_shrink_offset=None, slices=None):
+def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, slices=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
@@ -44,7 +44,7 @@ def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid
     joint_data = np.concatenate((grid_coords, DataConfig.scaling_factor*zgrid.reshape(-1, 1)), axis=1)
     if filter and filter_threshold is not None:
         joint_data = joint_data[joint_data[:, -1] > filter_threshold]
-    if DataConfig.domain_estimation:
+    if domain_estimation:
         hull = ConvexHull(samples)
         hull_points = samples[hull.vertices]
         polygon = Polygon(hull_points)
@@ -65,7 +65,7 @@ def main():
         samples = (samples - samples_min) / (samples_max - samples_min)
     samples = DataConfig.scaling_factor * samples
     # Ensure the data is read correctly
-    generate_joint(samples, save_prefix=DataConfig.processed_data_prefix, kernel_type=DataConfig.kernel_type, bw_adj_joint=DataConfig.bw_adj_joint, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices)
+    generate_joint(samples, save_prefix=DataConfig.processed_data_prefix, kernel_type=DataConfig.kernel_type, bw_adj_joint=DataConfig.bw_adj_joint, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices)
     print("done!")
 
 if __name__ == "__main__":
