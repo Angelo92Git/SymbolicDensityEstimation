@@ -1,0 +1,23 @@
+class DataConfig:
+    data_file_path = "./data/two_modal_samples_cluster_1.csv"
+    processed_data_prefix = "gaussian_cluster_1"
+    columns = ['x1', 'x2']
+    # mxbins = 300j # Number of bins for marginal distributions
+    # cxbins = 300j # Number of bins for conditional distributions
+    jxbins = 300j # Number of bins for joint distribution
+    # b_adj_m = 1.0 # Bandwidth adjustment for KDE adjustment factor on scott's factor for the bandwidth
+    # b_adj_c = 1.0
+    bw_adj_joint = 1.0 # Bandwidth adjustment for joint distribution KDE
+    kernel_type = 'gaussian' # Kernel type for KDE
+    # slice_num = 10 # Number of slices for conditional distributions
+    grid_tolerance = 1e-3 # Tolerance for grid generation
+    filter = False
+    filter_threshold = None # Threshold for filtering out low probability values
+    domain_estimation = False # Whether to estimate the domain of the data
+    # domain_factor = 0.9 # Factor to adjust the domain estimation
+    domain_shrink_offset = 1 # Offset to shrink the domain
+    # left_exfactor = 1.0 # Factor to shrink the left domain
+    # right_exfactor = 1.0 # Factor to shrink the right domain
+    slices = [slice(-12.0,4.0, jxbins), slice(-4.0, 12.0, jxbins)]
+    scaling_factor = 1.0
+    min_max_scaling = False
