@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=dijet                            # Job name
-#SBATCH --time=0-18:00:00                           # Time limit hrs:min:sec
+#SBATCH --time=0-8:00:00                           # Time limit hrs:min:sec
 #SBATCH --ntasks=1                                  # Number of tasks (processes)
 #SBATCH --cpus-per-task=25                          # Number of CPU cores per task (maximum on compute canada is 50)
 #SBATCH --mem=128G                                  # Memory per node
