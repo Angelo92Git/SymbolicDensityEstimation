@@ -1,10 +1,4 @@
-"""
-Diffusion-based density estimator for low-dimensional tabular data.
-
-The model trains a DDPM-style noise predictor and exposes a KDE-like interface
-(`fit`, `eval`, and `log_prob`). Density evaluation is approximated via a KDE
-fitted on samples generated from the trained diffusion model.
-"""
+"""Simple diffusion-based density estimator with a KDE-like API."""
 
 from typing import Iterable, List, Optional
 
@@ -88,13 +82,7 @@ class DiffusionModel(nn.Module):
 
 
 class model:
-    """
-    Wrapper exposing a KDE-like interface.
-
-    Density evaluation is performed using a KDE over samples produced by the
-    trained diffusion model; this keeps the interface similar to the NF and KDE
-    baselines used elsewhere in the project.
-    """
+    """Wrapper exposing fit/log_prob/eval/sample, using KDE on generated samples."""
 
     def __init__(
         self,

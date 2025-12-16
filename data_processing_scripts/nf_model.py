@@ -1,13 +1,4 @@
-"""
-Lightweight normalizing-flow density estimator for tabular data.
-
-Usage
------
->>> from data_processing_scripts import nf_model
->>> flow = nf_model.model(dim=2)
->>> flow.fit(samples)
->>> density = flow.eval(query_points)
-"""
+"""Minimal RealNVP density estimator with a KDE-like interface."""
 
 from typing import Iterable, List, Optional
 
@@ -100,22 +91,7 @@ class RealNVP(nn.Module):
 
 
 class model:
-    """
-    Wrapper exposing a KDE-like interface.
-
-    Parameters
-    ----------
-    dim:
-        Dimensionality of the data.
-    hidden:
-        Hidden width for the coupling networks.
-    num_coupling_layers:
-        Number of affine coupling layers.
-    standardize:
-        Whether to internally standardize the data before training/evaluation.
-    device:
-        Torch device override.
-    """
+    """Wrapper exposing fit/log_prob/eval/sample similar to a KDE."""
 
     def __init__(
         self,
