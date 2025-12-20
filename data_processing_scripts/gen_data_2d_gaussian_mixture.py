@@ -1,4 +1,4 @@
-# python -m data_processing_scripts.gen_data_bi_modal_2D_gaussian_mixture.py
+# python -m data_processing_scripts.gen_data_2d_gaussian_mixture
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-def sample_two_modal_gaussian(n_samples=1000, seed=None):
+def sample_two_modal_gaussian(n_samples=10000, seed=None):
     if seed is not None:
         np.random.seed(seed)
         
@@ -30,7 +30,7 @@ def sample_two_modal_gaussian(n_samples=1000, seed=None):
 
 
 # Generate and plot samples
-samples = sample_two_modal_gaussian(n_samples=1000, seed=42)
+samples = sample_two_modal_gaussian(n_samples=10000, seed=42)
 x1 = samples[:, 0]
 x2 = samples[:, 1]
 
