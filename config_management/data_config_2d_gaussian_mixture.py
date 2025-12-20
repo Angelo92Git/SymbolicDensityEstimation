@@ -19,5 +19,5 @@ class DataConfig:
     # left_exfactor = 1.0 # Factor to shrink the left domain
     # right_exfactor = 1.0 # Factor to shrink the right dom
     slices = [slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins)]
-    scaling_factor = 1.0
+    density_range_scaling_target = 10.0
     min_max_scaling = False

@@ -7,9 +7,4 @@ class DataConfig:
     bw_adj_joint = 0.3 # Bandwidth adjustment for joint distribution KDE #120 # Old value
     kernel_type = 'gaussian' # Kernel type for KDE
     slices=None
-    ####### for cls
-    # slices = [slice(-12.0,4.0, jxbins), slice(-4.0, 12.0, jxbins)]
-    # slices = [slice(-4.0,12.0, jxbins), slice(-12.0, 4.0, jxbins)]
-    ### for cls_gm
-    # slices = [slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins)]
-    #######
+    density_range_scaling_target=None

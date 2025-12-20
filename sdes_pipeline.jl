@@ -21,7 +21,7 @@ using LossFunctions
 @assert length(ARGS) ≥ 3 "Missing required command-line argument: continue_flag"
 @assert ARGS[3] == "true" || ARGS[3] == "false" "Expected true or false for third argument"
 
-@assert isa(ARGS[1], String) "First argument must be a String indicated"
+@assert isa(ARGS[1], String) "First argument must be a String"
 prefix = ARGS[1]
 if length(ARGS) ≥ 3
     continue_flag = ARGS[3] == "true"
@@ -96,26 +96,6 @@ if cfg_sr["downsample_joint_data"]
         df_j = df_j[shuffle(1:nrow(df_j))[1:n], :]
     else
         println("Did not need to downsample joint data, as the number of rows is less than the specified number of samples.")
-    end
-end
-
-if cfg_sr["scale_density"]
-    max_probability = maximum(df_j[:, :probability])
-    min_probability = minimum(df_j[:, :probability])
-    prob_range = max_probability - min_probability
-    println("Max probability in joint data before scaling: ", max_probability)
-    println("Min probability in joint data before scaling: ", min_probability)
-    println("Range of probabilities in joint data before scaling: ", prob_range)
-    if prob_range < 10.0
-        scale_factor = 10.0 / prob_range
-        df_j[:, :probability] = df_j[:, :probability] .* scale_factor
-        updated_prob_range = maximum(df_j[:, :probability]) - minimum(df_j[:, :probability])
-        println("Max probability in joint data after scaling: ", maximum(df_j[:, :probability]))
-        println("Min probability in joint data after scaling: ", minimum(df_j[:, :probability]))
-        println("Range of probabilities in joint data after scaling: ", updated_prob_range)
-        println("Scaling factor applied to joint data probabilities: ", scale_factor)
-    else
-        println("No scaling applied to joint data probabilities, as the range is already sufficient.")
     end
 end
 
