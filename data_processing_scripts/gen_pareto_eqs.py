@@ -13,7 +13,7 @@ def main():
     ]
 
     out_files = [
-        "../data/pareto_results/dijet_results.txt",
+        "../data/pareto_results/dijet_results.py",
     ]
 
     # Load the Pareto front CSV
