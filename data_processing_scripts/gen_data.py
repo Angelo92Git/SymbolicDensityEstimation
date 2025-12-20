@@ -11,7 +11,8 @@ import scipy
 import pandas as pd
 import dill
 from KDEpy import FFTKDE
-from data_processing_scripts.kde_wrapper import FFTKDEWrapper
+from data_processing_scripts.kde_wrapper import FFTKDEWrapper, KDECVAdapter
+from data_processing_scripts.cross_validation import cross_validate
 from config_management.data_config_2d_gaussian_mixture import DataConfig
 from scipy.spatial import ConvexHull
 from shapely.geometry import Polygon, Point
@@ -25,6 +26,13 @@ def kde1D(x, bandwidth, xbins, grid_tolerance, **kwargs):
     kde_skl.fit(x.reshape(-1, 1))
     density = kde_skl.evaluate(X.reshape(-1, 1))
     return X, density
+
+def create_grid(samples, jxbins, grid_tolerance):
+    d = samples.shape[1]
+    slices = [slice(np.min(samples[:, i])-grid_tolerance, np.max(samples[:, i])+grid_tolerance, jxbins) for i in range(d)]
+    grids = np.mgrid[tuple(slices)]
+    grid_coords = np.vstack([[grids[i].ravel()] for i in range(d)]).T
+    return grid_coords
 
 def read_file(file_path, columns):
     print("reading file...")
@@ -45,9 +53,10 @@ def generate_joint(samples, save_prefix, model_params, jxbins, grid_tolerance, f
     grid_coords = np.vstack([[grids[i].ravel()] for i in range(d)]).T
 
     # This is specific to the FFTKDE implementation
-    kernel_type = model_params.get('kernel_type', 'gaussian')
-    bw_adj_joint = model_params.get('bw_adj_joint', 1.0)
+    kernel_type = model_params['kernel_type']
+    bw_adj_joint = model_params['bw_adj_joint']
     bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
+    print(f"Bandwidth: {bw}")
     kde_all = FFTKDE(bw=bw, kernel=kernel_type)
     kde_all.fit(samples)
     zgrid = kde_all.evaluate(grid_coords)
@@ -118,12 +127,32 @@ def main():
         print("Applying min-max scaling...")
         train_samples = (train_samples - samples_min) / (samples_max - samples_min)
         test_samples = (test_samples - samples_min) / (samples_max - samples_min)
-    # Ensure the data is read correctly
-    # Ensure the data is read correctly
-    model_params = {
-        'kernel_type': DataConfig.kernel_type,
-        'bw_adj_joint': DataConfig.bw_adj_joint
+
+    # Perform Cross-Validation to find best bw_adj_joint
+    print("Performing Cross-Validation for Bandwidth Selection...")
+    bw_adj_joint_range = DataConfig.bw_adj_joint_range
+    bw_multipliers = np.linspace(bw_adj_joint_range[0], bw_adj_joint_range[1], 11)
+    
+    # We pass the multipliers to the adapter, and the adapter multiplies by scott_factor internally
+    cv_param_grid = {
+        'bw_adj_joint': bw_multipliers,
+        'kernel_type': [DataConfig.kernel_type]
     }
+    
+    # Generate grid for CV
+    grid_coords_cv = create_grid(samples, DataConfig.jxbins, DataConfig.grid_tolerance)
+    
+    kde_cv_config = {
+        'grid_coords': grid_coords_cv
+    }
+    
+    cv_model_factory = lambda params: KDECVAdapter(params, kde_cv_config)
+    
+    best_model, best_params, cv_results = cross_validate(train_samples, cv_model_factory, cv_param_grid, k=5)
+    
+    print(f"Cross-Validation Complete. Best Params: {best_params}")
+
+    model_params = best_params
     generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices, density_range_scaling_target=DataConfig.density_range_scaling_target)
     
     # Read and print scale factor

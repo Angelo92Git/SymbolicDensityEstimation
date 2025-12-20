@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.interpolate
+import scipy.stats
 from KDEpy import FFTKDE
 
 class FFTKDEWrapper:
@@ -107,3 +108,26 @@ class FFTKDEWrapper:
                      raise AssertionError(f"Point {X[i]} is outside grid bounds in dimension {d}. Range: {self.bounds[d]}")
                      
         return self.interpolator(X)
+
+class KDECVAdapter:
+    def __init__(self, hyperparams, config):
+        self.hyperparams = hyperparams
+        self.config = config
+        self.model = None
+
+    def fit(self, X):
+        kernel_type = self.hyperparams['kernel_type']
+        bw_adj_joint = self.hyperparams['bw_adj_joint']
+        
+        # Calculate bandwidth
+        bw = bw_adj_joint * scipy.stats.gaussian_kde(X.T).scotts_factor()
+        
+        # Get grid from config
+        grid_coords = self.config['grid_coords']
+        
+        base_model = FFTKDE(bw=bw, kernel=kernel_type).fit(X)
+        self.model = FFTKDEWrapper(base_model, grid_coords).fit(X)
+        return self
+
+    def evaluate(self, X):
+        return self.model.evaluate(X)
