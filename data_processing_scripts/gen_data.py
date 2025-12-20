@@ -32,7 +32,7 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, slices=None, density_range_scaling_target=None):
+def generate_joint(samples, save_prefix, model_params, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, slices=None, density_range_scaling_target=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
@@ -45,6 +45,8 @@ def generate_joint(samples, save_prefix, kernel_type, bw_adj_joint, jxbins, grid
     grid_coords = np.vstack([[grids[i].ravel()] for i in range(d)]).T
 
     # This is specific to the FFTKDE implementation
+    kernel_type = model_params.get('kernel_type', 'gaussian')
+    bw_adj_joint = model_params.get('bw_adj_joint', 1.0)
     bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
     kde_all = FFTKDE(bw=bw, kernel=kernel_type)
     kde_all.fit(samples)
@@ -117,7 +119,27 @@ def main():
         train_samples = (train_samples - samples_min) / (samples_max - samples_min)
         test_samples = (test_samples - samples_min) / (samples_max - samples_min)
     # Ensure the data is read correctly
-    generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, kernel_type=DataConfig.kernel_type, bw_adj_joint=DataConfig.bw_adj_joint, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices, density_range_scaling_target=DataConfig.density_range_scaling_target)
+    # Ensure the data is read correctly
+    model_params = {
+        'kernel_type': DataConfig.kernel_type,
+        'bw_adj_joint': DataConfig.bw_adj_joint
+    }
+    generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices, density_range_scaling_target=DataConfig.density_range_scaling_target)
+    
+    # Read and print scale factor
+    scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
+    print(f"Scale factor read from file: {scale_factor}")
+
+    # Score model on test set
+    print("Scoring model on test set...")
+    _, wrapper = load_models(DataConfig.processed_data_prefix)
+    densities = wrapper.evaluate(test_samples)
+    
+    # Handle zeros to avoid -inf
+    densities = np.maximum(densities, 1e-10)
+    log_likelihood = np.sum(np.log(densities))
+    print(f"Test Set Log-Likelihood: {log_likelihood}")
+    
     print("done!")
 
 if __name__ == "__main__":
