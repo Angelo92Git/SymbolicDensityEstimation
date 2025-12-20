@@ -123,10 +123,10 @@ class KDECVAdapter:
         bw = bw_adj_joint * scipy.stats.gaussian_kde(X.T).scotts_factor()
         
         # Get grid from config
-        grid_coords = self.config['grid_coords']
+        evaluation_grid = self.config['evaluation_grid']
         
         base_model = FFTKDE(bw=bw, kernel=kernel_type).fit(X)
-        self.model = FFTKDEWrapper(base_model, grid_coords).fit(X)
+        self.model = FFTKDEWrapper(base_model, evaluation_grid).fit(X)
         return self
 
     def evaluate(self, X):

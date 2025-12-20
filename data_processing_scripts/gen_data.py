@@ -27,9 +27,10 @@ def kde1D(x, bandwidth, xbins, grid_tolerance, **kwargs):
     density = kde_skl.evaluate(X.reshape(-1, 1))
     return X, density
 
-def create_grid(samples, jxbins, grid_tolerance):
+def create_grid(samples, jxbins, grid_tolerance, slices=None):
     d = samples.shape[1]
-    slices = [slice(np.min(samples[:, i])-grid_tolerance, np.max(samples[:, i])+grid_tolerance, jxbins) for i in range(d)]
+    if slices is None:
+        slices = [slice(np.min(samples[:, i])-grid_tolerance, np.max(samples[:, i])+grid_tolerance, jxbins) for i in range(d)]
     grids = np.mgrid[tuple(slices)]
     grid_coords = np.vstack([[grids[i].ravel()] for i in range(d)]).T
     return grid_coords
@@ -40,30 +41,23 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, model_params, jxbins, grid_tolerance, filter, domain_extents=None, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, slices=None, density_range_scaling_target=None):
+def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
-    if slices == None:
-        if domain_extents is not None:
-            slices = [slice(domain_extents[i][0], domain_extents[i][1], jxbins) for i in range(d)]
-        else:
-            slices = [slice(np.min(samples[:, i])-grid_tolerance, np.max(samples[:, i])+grid_tolerance, jxbins) for i in range(d)]
-    grids = np.mgrid[tuple(slices)]
-    grid_coords = np.vstack([[grids[i].ravel()] for i in range(d)]).T
-
     # This is specific to the FFTKDE implementation
+    evaluation_grid = model_params['evaluation_grid']
     kernel_type = model_params['kernel_type']
     bw_adj_joint = model_params['bw_adj_joint']
     bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
     print(f"Bandwidth: {bw}")
     kde_all = FFTKDE(bw=bw, kernel=kernel_type)
     kde_all.fit(samples)
-    zgrid = kde_all.evaluate(grid_coords)
+    zgrid = kde_all.evaluate(evaluation_grid)
     
     # Wrap the model and verify
-    wrapper = FFTKDEWrapper(kde_all, grid_coords).fit(samples)
-    zgrid_wrapper = wrapper.evaluate(grid_coords)
+    wrapper = FFTKDEWrapper(kde_all, evaluation_grid).fit(samples)
+    zgrid_wrapper = wrapper.evaluate(evaluation_grid)
     assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
     print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
 
@@ -75,7 +69,7 @@ def generate_joint(samples, save_prefix, model_params, jxbins, grid_tolerance, f
         dill.dump(wrapper, f)
     print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
 
-    joint_data = np.concatenate((grid_coords, zgrid.reshape(-1, 1)), axis=1)
+    joint_data = np.concatenate((evaluation_grid, zgrid.reshape(-1, 1)), axis=1)
     if filter and filter_threshold is not None:
         joint_data = joint_data[joint_data[:, -1] > filter_threshold]
     if domain_estimation:
@@ -140,10 +134,10 @@ def main():
     }
     
     # Generate grid for CV
-    grid_coords_cv = create_grid(samples, DataConfig.jxbins, DataConfig.grid_tolerance)
+    evaluation_grid = create_grid(samples, DataConfig.jxbins, DataConfig.grid_tolerance, slices=DataConfig.slices)
     
     kde_cv_config = {
-        'grid_coords': grid_coords_cv
+        'evaluation_grid': evaluation_grid
     }
     
     cv_model_factory = lambda params: KDECVAdapter(params, kde_cv_config)
@@ -152,8 +146,13 @@ def main():
     
     print(f"Cross-Validation Complete. Best Params: {best_params}")
 
-    model_params = best_params
-    generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, jxbins=DataConfig.jxbins, grid_tolerance=DataConfig.grid_tolerance, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, slices=DataConfig.slices, density_range_scaling_target=DataConfig.density_range_scaling_target)
+    model_params = {
+        'kernel_type': best_params['kernel_type'],
+        'bw_adj_joint': best_params['bw_adj_joint'],
+        'evaluation_grid': evaluation_grid
+    }
+    
+    generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target)
     
     # Read and print scale factor
     scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
