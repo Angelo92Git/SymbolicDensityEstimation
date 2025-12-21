@@ -15,14 +15,6 @@ from KDEpy import FFTKDE
 from data_processing_scripts.kde_wrapper import FFTKDEWrapper, KDECVAdapter
 from data_processing_scripts.cross_validation import cross_validate
 import importlib
-
-if len(sys.argv) < 2:
-    print("Usage: python -m data_processing_scripts.gen_data <config_module_name>")
-    sys.exit(1)
-
-config_module_name = sys.argv[1]
-DataConfig = importlib.import_module(f"config_management.{config_module_name}").DataConfig
-
 from scipy.spatial import ConvexHull
 from shapely.geometry import Polygon, Point
 
@@ -114,7 +106,7 @@ def load_models(save_prefix, models_dir="models"):
         wrapper_model = dill.load(f)
     return kde_model, wrapper_model
 
-def main():
+def main(DataConfig):
     samples = read_file(DataConfig.data_file_path, DataConfig.columns)
     # 90-10 train-test split
     np.random.shuffle(samples)
@@ -180,4 +172,10 @@ def main():
     print("done!")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) < 2:
+        print("Usage: python -m data_processing_scripts.gen_data <config_module_name>")
+        sys.exit(1)
+        
+    config_module_name = sys.argv[1]
+    DataConfig = importlib.import_module(f"config_management.{config_module_name}").DataConfig
+    main(DataConfig)
