@@ -1,5 +1,6 @@
 # To run in project root directory: python -m data_processing_scripts.gen_data
 
+import sys
 ## For Debugging:
 # import sys
 # import os
@@ -13,7 +14,15 @@ import dill
 from KDEpy import FFTKDE
 from data_processing_scripts.kde_wrapper import FFTKDEWrapper, KDECVAdapter
 from data_processing_scripts.cross_validation import cross_validate
-from config_management.data_config_2d_gaussian_mixture import DataConfig
+import importlib
+
+if len(sys.argv) < 2:
+    print("Usage: python -m data_processing_scripts.gen_data <config_module_name>")
+    sys.exit(1)
+
+config_module_name = sys.argv[1]
+DataConfig = importlib.import_module(f"config_management.{config_module_name}").DataConfig
+
 from scipy.spatial import ConvexHull
 from shapely.geometry import Polygon, Point
 
