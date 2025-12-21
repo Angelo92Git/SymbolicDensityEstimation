@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-def sample_two_modal_gaussian(n_samples=100000, seed=None):
+def sample_two_modal_gaussian(n_samples=500000, seed=None):
     if seed is not None:
         np.random.seed(seed)
         
@@ -73,7 +73,7 @@ def match_labels_to_reference(ref_centroids, current_centroids, tolerance=1.0):
         
     return mapping
 
-def run_batched_dbscan(samples, eps, min_samples, n_batches=10):
+def run_batched_dbscan(samples, eps, min_samples, n_batches=50):
     n_total = len(samples)
     batch_size = int(np.ceil(n_total / n_batches))
     
@@ -131,7 +131,6 @@ def run_batched_dbscan(samples, eps, min_samples, n_batches=10):
 
 # Generate and plot samples
 samples = sample_two_modal_gaussian(seed=42)
-samples = np.concatenate((samples, sample_two_modal_gaussian(seed=43)), axis=0)
 x1 = samples[:, 0]
 x2 = samples[:, 1]
 
@@ -144,7 +143,7 @@ df.to_csv("./data/two_modal_samples.csv", index=False)
 
 # 1. Run Batched DBSCAN
 try:
-    labels = run_batched_dbscan(samples, eps=5, min_samples=10, n_batches=10)
+    labels = run_batched_dbscan(samples, eps=5, min_samples=10, n_batches=50)
 except ValueError as e:
     print(f"Detailed Error: {e}")
     exit(1)
