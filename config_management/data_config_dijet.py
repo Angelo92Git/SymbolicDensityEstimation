@@ -8,3 +8,4 @@ class DataConfig:
     kernel_type = 'gaussian' # Kernel type for KDE
     slices=None
     density_range_scaling_target=None
+    min_max_scaling = True
