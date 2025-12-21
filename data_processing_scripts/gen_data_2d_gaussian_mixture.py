@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-def sample_two_modal_gaussian(n_samples=100000, seed=None):
+def sample_two_modal_gaussian(n_samples=20000, seed=None):
     if seed is not None:
         np.random.seed(seed)
         
@@ -30,7 +30,7 @@ def sample_two_modal_gaussian(n_samples=100000, seed=None):
 
 
 # Generate and plot samples
-samples = sample_two_modal_gaussian(n_samples=100000, seed=42)
+samples = sample_two_modal_gaussian(n_samples=20000, seed=42)
 x1 = samples[:, 0]
 x2 = samples[:, 1]
 
