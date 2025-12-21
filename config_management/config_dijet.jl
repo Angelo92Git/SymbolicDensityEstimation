@@ -10,7 +10,7 @@ const CONFIG_sr = Dict(
     "nested_constraints" => [pow2 => [pow2 => 0], pow3 => [pow3 => 0], exp => [exp => 0], log => [log => 0]],
     "maxsize" => 30,
     "ncycles_per_iteration" => 380,
-    "parsimony" => 0.0,
+    "parsimony" => 0.001,
     "warmup_maxsize_by" => 0.0,
     "adaptive_parsimony_scaling" => 1040,
     "parallelism_for_joint_sr" => :multithreading,
@@ -27,5 +27,4 @@ const CONFIG_sr = Dict(
     "downsample_joint_data" => true,
     "num_samples_joint_data" => 1000, # Number of samples to use for joint data downsampling
     "elementwise_loss" => LossFunctions.L2DistLoss(),
-    "scale_density" => true
 )

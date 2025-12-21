@@ -3,7 +3,6 @@ pow3(x) = x^3
 pow4(x) = x^4
 pow5(x) = x^5
 
-
 const CONFIG_sr = Dict(
     "binary_operators" => [+, -, *, /],
     "unary_operators" => [exp, log, pow2, pow3],
@@ -14,8 +13,6 @@ const CONFIG_sr = Dict(
     "parsimony" => 0.001,
     "warmup_maxsize_by" => 0.0,
     "adaptive_parsimony_scaling" => 1040,
-    "parallelism_for_marginal_sr" => :multithreading,
-    "parallelism_for_conditional_sr" => :multithreading,
     "parallelism_for_joint_sr" => :multithreading,
     "niterations_for_joint_sr" => 8000,
     "num_populations_for_joint_sr" => 15,
