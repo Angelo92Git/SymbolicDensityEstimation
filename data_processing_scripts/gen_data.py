@@ -125,6 +125,10 @@ def main(DataConfig):
         samples_scaled = (samples - samples_min) / (samples_max - samples_min)
         train_samples_scaled = (train_samples - samples_min) / (samples_max - samples_min)
         test_samples_scaled = (test_samples - samples_min) / (samples_max - samples_min)
+    else:
+        samples_scaled = samples
+        train_samples_scaled = train_samples
+        test_samples_scaled = test_samples
 
     # Perform Cross-Validation to find best bw_adj_joint
     print("Performing Cross-Validation for Bandwidth Selection...")
