@@ -7,3 +7,4 @@ class DataConfig:
     bw_adj_joint = 0.3 # Bandwidth adjustment for joint distribution KDE #120 # Old value
     kernel_type = 'gaussian' # Kernel type for KDE
     slices=None
+    min_max_scaling = True
