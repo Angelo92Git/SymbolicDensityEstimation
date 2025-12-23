@@ -2,7 +2,7 @@ import numpy as np
 
 class DataConfig:
     data_file_path = "./data/Dijets.csv"
-    processed_data_prefix = "dijet_minmax_scaled"
+    processed_data_prefix = "dijet"
     columns = ['mjj', 'HT']
     jxbins = 3000j # Number of bins for joint distribution
     # (Not used)bw_adj_joint = 0.3 # Bandwidth adjustment for joint distribution KDE #120 # Old value (Not used)
