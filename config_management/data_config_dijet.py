@@ -1,3 +1,4 @@
+import numpy as np
 
 class DataConfig:
     data_file_path = "./data/Dijets.csv"
