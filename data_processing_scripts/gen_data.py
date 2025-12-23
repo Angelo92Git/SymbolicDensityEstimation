@@ -126,7 +126,8 @@ def main(DataConfig):
     # Perform Cross-Validation to find best bw_adj_joint
     print("Performing Cross-Validation for Bandwidth Selection...")
     bw_adj_joint_range = DataConfig.bw_adj_joint_range
-    bw_multipliers = np.linspace(bw_adj_joint_range[0], bw_adj_joint_range[1], 11)
+    cv_intervals = DataConfig.cv_intervals
+    bw_multipliers = np.linspace(bw_adj_joint_range[0], bw_adj_joint_range[1], cv_intervals)
     
     # We pass the multipliers to the adapter, and the adapter multiplies by scott_factor internally
     cv_param_grid = {
@@ -138,7 +139,8 @@ def main(DataConfig):
     evaluation_grid = create_grid(samples, DataConfig.jxbins, DataConfig.grid_tolerance, slices=DataConfig.slices)
     
     kde_cv_config = {
-        'evaluation_grid': evaluation_grid
+        'evaluation_grid': evaluation_grid,
+        'reflection_lines': DataConfig.reflection_lines
     }
     
     cv_model_factory = lambda params: KDECVAdapter(params, kde_cv_config)
@@ -150,7 +152,8 @@ def main(DataConfig):
     model_params = {
         'kernel_type': best_params['kernel_type'],
         'bw_adj_joint': best_params['bw_adj_joint'],
-        'evaluation_grid': evaluation_grid
+        'evaluation_grid': evaluation_grid,
+        'reflection_lines': DataConfig.reflection_lines
     }
     
     generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target)
