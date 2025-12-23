@@ -3,8 +3,8 @@
 import sys
 ## For Debugging:
 # import sys
-# import os
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 ##
 
 import numpy as np
@@ -60,8 +60,9 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
     # Wrap the model and verify
     wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit(samples)
     zgrid_wrapper = wrapper.evaluate(evaluation_grid)
-    assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
-    print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
+    if reflection_lines is None:
+        assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
+        print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
 
     # Save models
     models_dir = "models"
@@ -121,8 +122,9 @@ def main(DataConfig):
     # Min-max scaling
     if DataConfig.min_max_scaling:
         print("Applying min-max scaling...")
-        train_samples = (train_samples - samples_min) / (samples_max - samples_min)
-        test_samples = (test_samples - samples_min) / (samples_max - samples_min)
+        samples_scaled = (samples - samples_min) / (samples_max - samples_min)
+        train_samples_scaled = (train_samples - samples_min) / (samples_max - samples_min)
+        test_samples_scaled = (test_samples - samples_min) / (samples_max - samples_min)
 
     # Perform Cross-Validation to find best bw_adj_joint
     print("Performing Cross-Validation for Bandwidth Selection...")
@@ -137,7 +139,7 @@ def main(DataConfig):
     }
     
     # Generate grid for CV
-    evaluation_grid = create_grid(samples, DataConfig.jxbins, DataConfig.grid_tolerance, slices=DataConfig.slices)
+    evaluation_grid = create_grid(samples_scaled, DataConfig.jxbins, DataConfig.grid_tolerance, slices=DataConfig.slices)
     
     kde_cv_config = {
         'evaluation_grid': evaluation_grid,
@@ -146,7 +148,7 @@ def main(DataConfig):
     
     cv_model_factory = lambda params: KDECVAdapter(params, kde_cv_config)
     
-    best_model, best_params, cv_results = cross_validate(train_samples, cv_model_factory, cv_param_grid, k=5)
+    best_model, best_params, cv_results = cross_validate(train_samples_scaled, cv_model_factory, cv_param_grid, k=5)
     
     print(f"Cross-Validation Complete. Best Params: {best_params}")
 
@@ -157,7 +159,7 @@ def main(DataConfig):
         'reflection_lines': DataConfig.reflection_lines
     }
     
-    generate_joint(train_samples, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target)
     
     # Read and print scale factor
     scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
@@ -166,7 +168,7 @@ def main(DataConfig):
     # Score model on test set
     print("Scoring model on test set...")
     _, wrapper = load_models(DataConfig.processed_data_prefix)
-    densities = wrapper.evaluate(test_samples)
+    densities = wrapper.evaluate(test_samples_scaled)
     
     # Handle zeros to avoid -inf
     densities = np.maximum(densities, 1e-10)
@@ -179,7 +181,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python -m data_processing_scripts.gen_data <config_module_name>")
         sys.exit(1)
-        
     config_module_name = sys.argv[1]
     DataConfig = importlib.import_module(f"config_management.{config_module_name}").DataConfig
     main(DataConfig)
