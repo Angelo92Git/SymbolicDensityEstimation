@@ -50,6 +50,7 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
     evaluation_grid = model_params['evaluation_grid']
     kernel_type = model_params['kernel_type']
     bw_adj_joint = model_params['bw_adj_joint']
+    reflection_lines = model_params['reflection_lines']
     bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
     print(f"Bandwidth: {bw}")
     kde_all = FFTKDE(bw=bw, kernel=kernel_type)
@@ -57,7 +58,7 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
     zgrid = kde_all.evaluate(evaluation_grid)
     
     # Wrap the model and verify
-    wrapper = FFTKDEWrapper(kde_all, evaluation_grid).fit(samples)
+    wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit(samples)
     zgrid_wrapper = wrapper.evaluate(evaluation_grid)
     assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
     print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
