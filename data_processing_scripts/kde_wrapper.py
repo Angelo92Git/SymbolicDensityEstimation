@@ -104,6 +104,42 @@ class FFTKDEWrapper:
         
         return self
 
+    def __getstate__(self):
+        """
+        Customize pickle serialization to minimize footprint.
+        Only stores essential data needed to reconstruct the interpolator.
+        """
+        return {
+            'grid_axes': self.grid_axes,
+            'zgrid_corrected': self.zgrid_corrected,
+            'bounds': self.bounds,
+            'n_dims': self.n_dims,
+            'reflection_lines': self.reflection_lines,
+        }
+
+    def __setstate__(self, state):
+        """
+        Customize pickle deserialization to reconstruct the interpolator.
+        """
+        self.grid_axes = state['grid_axes']
+        self.zgrid_corrected = state['zgrid_corrected']
+        self.bounds = state['bounds']
+        self.n_dims = state['n_dims']
+        self.reflection_lines = state['reflection_lines']
+        
+        # Reconstruct derived attributes
+        self.grids = np.meshgrid(*self.grid_axes, indexing='ij')
+        self.grid_coords = np.vstack([g.ravel() for g in self.grids]).T
+        self.zgrid = None  # Original zgrid is not preserved
+        
+        # Reconstruct the interpolator
+        self.interpolator = scipy.interpolate.RegularGridInterpolator(
+            self.grid_axes, 
+            self.zgrid_corrected, 
+            bounds_error=True, 
+            method='linear'
+        )
+
     def _apply_reflection_trick(self, zgrid_reshaped):
         """
         Apply the reflection trick across all reflection lines.
