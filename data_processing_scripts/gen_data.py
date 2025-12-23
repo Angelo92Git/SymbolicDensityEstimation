@@ -58,7 +58,7 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
     zgrid = kde_all.evaluate(evaluation_grid)
     
     # Wrap the model and verify
-    wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit(samples)
+    wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit()
     zgrid_wrapper = wrapper.evaluate(evaluation_grid)
     if reflection_lines is None:
         assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."

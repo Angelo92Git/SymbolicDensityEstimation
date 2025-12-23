@@ -15,6 +15,6 @@ class DataConfig:
     filter_threshold = None # Threshold for filtering out low probability values
     domain_estimation = False # Whether to estimate the domain of the data
     domain_shrink_offset = 1 # Offset to shrink the domain
-    slices=None
+    slices=[slice(-1.1, 1.1, jxbins), slice(-1.1, 1.1, jxbins)]
     density_range_scaling_target = None # Target for density range scaling
     min_max_scaling = True

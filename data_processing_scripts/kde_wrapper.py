@@ -59,7 +59,8 @@ class FFTKDEWrapper:
                 "reflection_lines must have shape (K, 3) with columns [slope, intercept, valid_above]."
 
         # If all checks pass, initialize attributes
-        self.base_model = base_model
+        # Note: base_model is stored temporarily, will be deleted after fit()
+        self._base_model = base_model
         self.grid_coords = grid_coords
         self.reflection_lines = reflection_lines
         self.zgrid = None
@@ -70,26 +71,24 @@ class FFTKDEWrapper:
         self.bounds = bounds
         self.grids = grids
             
-    def fit(self, X, y=None):
+    def fit(self):
         """
-        Fits the base model and prepares the interpolator.
+        Evaluates base model on the fixed grid and prepares the interpolator.
         Applies reflection trick if reflection_lines was provided.
+        Note: base_model should already be fitted before passing to constructor.
         """
-        # Fit the base model (which essentially just stores the data/computes stats)
-        self.base_model.fit(X)
-        
         # Evaluate on the fixed grid
-        self.zgrid = self.base_model.evaluate(self.grid_coords)
+        self.zgrid = self._base_model.evaluate(self.grid_coords)
         
         # Reshape zgrid for RegularGridInterpolator
         grid_shape = tuple(len(ax) for ax in self.grid_axes)
-        self.zgrid_reshaped = self.zgrid.reshape(grid_shape)
+        zgrid_reshaped = self.zgrid.reshape(grid_shape)
         
         # Apply reflection trick if reflection_lines provided
         if self.reflection_lines is not None:
-            final_grid = self._apply_reflection_trick()
+            final_grid = self._apply_reflection_trick(zgrid_reshaped)
         else:
-            final_grid = self.zgrid_reshaped
+            final_grid = zgrid_reshaped
         
         self.zgrid_corrected = final_grid
         
@@ -99,11 +98,18 @@ class FFTKDEWrapper:
             bounds_error=True, 
             method='linear'
         )
+        
+        # Release base_model to free memory - no longer needed after interpolator is prepared
+        del self._base_model
+        
         return self
 
-    def _apply_reflection_trick(self):
+    def _apply_reflection_trick(self, zgrid_reshaped):
         """
         Apply the reflection trick across all reflection lines.
+        
+        Args:
+            zgrid_reshaped: The reshaped zgrid values from the base KDE.
         
         For each reflection line y = m*x + b, we:
         1. Reflect original grid points across the line
@@ -117,13 +123,13 @@ class FFTKDEWrapper:
         # Create interpolator for the original (uncorrected) KDE
         base_interp = scipy.interpolate.RegularGridInterpolator(
             (self.grid_axes[0], self.grid_axes[1]),
-            np.abs(self.zgrid_reshaped),
+            np.abs(zgrid_reshaped),
             bounds_error=False,
             fill_value=0
         )
         
         # Start with the original KDE values
-        sum_grid = self.zgrid_reshaped.copy()
+        sum_grid = zgrid_reshaped.copy()
         
         # Add reflected values for each reflection line
         for i in range(self.reflection_lines.shape[0]):
@@ -209,7 +215,7 @@ class KDECVAdapter:
         reflection_lines = self.config.get('reflection_lines', None)
         
         base_model = FFTKDE(bw=bw, kernel=kernel_type).fit(X)
-        self.model = FFTKDEWrapper(base_model, evaluation_grid, reflection_lines=reflection_lines).fit(X)
+        self.model = FFTKDEWrapper(base_model, evaluation_grid, reflection_lines=reflection_lines).fit()
         return self
 
     def evaluate(self, X):
