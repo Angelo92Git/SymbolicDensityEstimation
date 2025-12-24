@@ -12,6 +12,7 @@ class DataConfig:
     cv_intervals = 11 # Number of intervals for cross-validation
     kernel_type = 'gaussian' # Kernel type for KDE
     reflection_lines = None
+    truncate_range = None
     # slice_num = 10 # Number of slices for conditional distributions
     grid_tolerance = 1e-3 # Tolerance for grid generation
     filter = False
