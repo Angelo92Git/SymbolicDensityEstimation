@@ -18,4 +18,4 @@ class DataConfig:
     slices=[slice(-1.1, 1.1, jxbins), slice(-1.1, 1.1, jxbins)]
     density_range_scaling_target = None # Target for density range scaling
     min_max_scaling = True
-    truncate_range = (0.6, 0.6) # Range to truncate the data, typically use after reflection trick since we don't want to truncate the domain prematurely
+    truncate_range = None # Range to truncate the data, typically use after reflection trick since we don't want to truncate the domain prematurely
