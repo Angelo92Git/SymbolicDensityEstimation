@@ -8,7 +8,6 @@
 
 module load StdEnv/2023 julia/1.11.3
 julia --thread=64 sdes_pipeline.jl "dijet" "config_dijet" "false"
-# julia --thread=64 sdes_pipeline.jl "dijet" "config_debug" "false"
 
 # module load python/3.12
 # module load scipy-stack
