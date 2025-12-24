@@ -2,6 +2,11 @@
 .hyperparams*.jl
 outputs
 *.csv
+# Include all files in data/processed_data/
+!data/
+!data/**
+!data/processed_data/
+!data/processed_data/**
 *.bak
 *.bkup
 performance*txt
