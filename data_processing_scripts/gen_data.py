@@ -42,7 +42,7 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None):
+def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
@@ -72,6 +72,12 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
             mask = mask | ((evaluation_grid[:, 1] > m * evaluation_grid[:, 0] + b) if gt_or_lt == 1 else (evaluation_grid[:, 1] < m * evaluation_grid[:, 0] + b))
         evaluation_grid = evaluation_grid[~mask]
         zgrid_wrapper = zgrid_wrapper[~mask]
+        if truncate_range is not None:
+            mask_x = evaluation_grid[:, 0] > truncate_range[0]
+            mask_y = evaluation_grid[:, 1] > truncate_range[1]
+            range_mask = mask_x | mask_y
+            evaluation_grid = evaluation_grid[~range_mask]
+            zgrid_wrapper = zgrid_wrapper[~range_mask]
 
     # Save models
     models_dir = "models"
