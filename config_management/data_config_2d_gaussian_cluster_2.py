@@ -21,6 +21,6 @@ class DataConfig:
     domain_shrink_offset = 1 # Offset to shrink the domain
     # left_exfactor = 1.0 # Factor to shrink the left domain
     # right_exfactor = 1.0 # Factor to shrink the right domain
-    slices = [slice(-4.0,12.0, jxbins), slice(-12.0, 4.0, jxbins)]
+    slices = [slice(-12.0,4.0, jxbins), slice(-4.0, 12.0, jxbins)]
     density_range_scaling_target = 10.0
     min_max_scaling = False
