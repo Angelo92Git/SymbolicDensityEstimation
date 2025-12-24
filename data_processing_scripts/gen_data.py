@@ -63,6 +63,15 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
     if reflection_lines is None:
         assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
         print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
+    else:
+        mask = np.zeros(evaluation_grid.shape[0], dtype=bool)
+        for i in range(reflection_lines.shape[0]):
+            m = reflection_lines[i, 0]  # slope
+            b = reflection_lines[i, 1]  # intercept
+            gt_or_lt = reflection_lines[i, 2]  # 1 for greater than (valid above), 0 for less than (valid below)
+            mask = mask | ((evaluation_grid[:, 1] > m * evaluation_grid[:, 0] + b) if gt_or_lt == 1 else (evaluation_grid[:, 1] < m * evaluation_grid[:, 0] + b))
+        evaluation_grid = evaluation_grid[~mask]
+        zgrid_wrapper = zgrid_wrapper[~mask]
 
     # Save models
     models_dir = "models"
@@ -72,7 +81,7 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
         dill.dump(wrapper, f)
     print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
 
-    joint_data = np.concatenate((evaluation_grid, zgrid.reshape(-1, 1)), axis=1)
+    joint_data = np.concatenate((evaluation_grid, zgrid_wrapper.reshape(-1, 1)), axis=1)
     if filter and filter_threshold is not None:
         joint_data = joint_data[joint_data[:, -1] > filter_threshold]
     if domain_estimation:
