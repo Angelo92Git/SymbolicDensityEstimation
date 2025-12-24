@@ -178,7 +178,7 @@ def main(DataConfig):
         'reflection_lines': DataConfig.reflection_lines
     }
     
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
     
     # Read and print scale factor
     scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
