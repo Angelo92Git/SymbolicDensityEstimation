@@ -32,7 +32,7 @@ else
     note = ""
 end
 
-log_prefix = "cluster_"*prefix*note
+log_prefix = "jobresult_"*prefix*note
 
 include("./config_management/"*ARGS[2]*".jl")
 cfg_sr=CONFIG_sr

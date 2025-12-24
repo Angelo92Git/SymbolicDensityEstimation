@@ -73,10 +73,10 @@ def main():
 
     # Define prefixes for each dataset
     prefixes = [
-        'cluster_gaussian_mixture',
-        'cluster_dijet',
-        'cluster_gaussian_cluster_1',
-        'cluster_gaussian_cluster_2',
+        'jobresult_gaussian_mixture',
+        'jobresult_dijet',
+        'jobresult_gaussian_cluster_1',
+        'jobresult_gaussian_cluster_2',
     ]
 
     post_fixes = [
