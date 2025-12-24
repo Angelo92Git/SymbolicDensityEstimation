@@ -3,8 +3,8 @@
 import sys
 ## For Debugging:
 # import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# import os
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 ##
 
 import numpy as np
@@ -69,7 +69,7 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
             m = reflection_lines[i, 0]  # slope
             b = reflection_lines[i, 1]  # intercept
             gt_or_lt = reflection_lines[i, 2]  # 1 for greater than (valid above), 0 for less than (valid below)
-            mask = mask | ((evaluation_grid[:, 1] > m * evaluation_grid[:, 0] + b) if gt_or_lt == 1 else (evaluation_grid[:, 1] < m * evaluation_grid[:, 0] + b))
+            mask = mask | ((evaluation_grid[:, 1] < m * evaluation_grid[:, 0] + b) if gt_or_lt == 1 else (evaluation_grid[:, 1] > m * evaluation_grid[:, 0] + b))
         evaluation_grid = evaluation_grid[~mask]
         zgrid_wrapper = zgrid_wrapper[~mask]
         if truncate_range is not None:
@@ -201,5 +201,6 @@ if __name__ == "__main__":
         print("Usage: python -m data_processing_scripts.gen_data <config_module_name>")
         sys.exit(1)
     config_module_name = sys.argv[1]
+    # config_module_name = ""
     DataConfig = importlib.import_module(f"config_management.{config_module_name}").DataConfig
     main(DataConfig)
