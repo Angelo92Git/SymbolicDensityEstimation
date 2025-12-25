@@ -14,3 +14,5 @@ julia --thread=64 sdes_pipeline.jl "gaussian_mixture" "config_gaussian" "false"
 # pip install KDEpy
 # pip install --upgrade KDEpy
 # srun --cpus-per-task=1 --mem=25G --time=01:00:00 --pty bash
+## on fir
+# srun --partition=cpupreempt --cpus-per-task=1 --mem=32G --time=01:00:00 --pty bash
