@@ -12,8 +12,8 @@ from pgmpy.estimators import PC
 import networkx as nx
 
 np.random.seed(0)
-mu = np.array([0,1,2,3])
-cov = np.array([[3,1,0,0],[1,1,0,0],[0,0,4,2],[0,0,2,4]])
+mu = np.array([4,-4,-4,4])
+cov = np.array([[1,0.8,0,0],[0.8,1,0,0],[0,0,1,0.8],[0,0,0.8,1]])
 samples = np.random.multivariate_normal(mu, cov, size = 250000, check_valid='raise')
 x1 = samples[:, 0]
 x2 = samples[:, 1]
