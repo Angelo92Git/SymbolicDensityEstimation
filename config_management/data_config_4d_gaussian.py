@@ -4,7 +4,7 @@ class DataConfig:
     columns = ['x1', 'x2', 'x3', 'x4']
     # mxbins = 300j # Number of bins for marginal distributions
     # cxbins = 300j # Number of bins for conditional distributions
-    jxbins = 1200j # Number of bins for joint distribution ~1.41*800
+    jxbins = 100j # Number of bins for joint distribution ~1.41*800
     # b_adj_m = 1.0 # Bandwidth adjustment for KDE adjustment factor on scott's factor for the bandwidth
     # b_adj_c = 1.0
     # (Not used) bw_adj_joint = 0.8 # Bandwidth adjustment for joint distribution KDE (Not used)
@@ -22,6 +22,6 @@ class DataConfig:
     domain_shrink_offset = 1 # Offset to shrink the domain
     # left_exfactor = 1.0 # Factor to shrink the left domain
     # right_exfactor = 1.0 # Factor to shrink the right dom
-    slices = [slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins)]
+    slices = [slice(-13.0, 13.0, jxbins), slice(-13.0, 13.0, jxbins), slice(-13.0, 13.0, jxbins), slice(-13.0, 13.0, jxbins)]
     density_range_scaling_target = 10.0
     min_max_scaling = False
