@@ -1,3 +1,4 @@
+# python -m data_processing_scripts.gen_data_4d_gaussian
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
