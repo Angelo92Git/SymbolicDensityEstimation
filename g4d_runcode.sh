@@ -16,3 +16,4 @@ julia --thread=64 sdes_pipeline.jl "gaussian_4d" "config_gaussian" "false"
 # srun --cpus-per-task=1 --mem=25G --time=01:00:00 --pty bash
 ## on fir
 # srun --partition=cpupreempt --cpus-per-task=1 --mem=32G --time=01:00:00 --pty bash
+# scp aa3rajen@fir.alliance.ca:projects/def-vganesh/aa3rajen/SymbolicDensityEstimation/data/processed_data/gaussian_4d_joint_data.zip ./data/processed_data 
