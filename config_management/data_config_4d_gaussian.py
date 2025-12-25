@@ -1,5 +1,5 @@
 class DataConfig:
-    data_file_path = "./data/4d_gaussian_samples.csv"
+    data_file_path = "./data/gaussian_4d_samples.csv"
     processed_data_prefix = "gaussian_4d"
     columns = ['x1', 'x2', 'x3', 'x4']
     # mxbins = 300j # Number of bins for marginal distributions
