@@ -1,3 +1,4 @@
+# python -m data_processing_scripts.gen_pareto_eqs
 import pandas as pd
 import pprint
 import os
@@ -5,7 +6,7 @@ import re
 from pathlib import Path
 
 
-def get_latest_hall_of_fame_path(prefix, logs_dir='../logs', subfolder='joint_distribution_sr'):
+def get_latest_hall_of_fame_path(prefix, logs_dir='logs', subfolder='joint_distribution_sr'):
     """
     Find the latest hall_of_fame.csv for a given log prefix.
     
@@ -87,10 +88,10 @@ def main():
     ]
 
     out_files = [
-        "../data/pareto_results/gaussian_mixture_results.py",
-        "../data/pareto_results/dijet_results.py",
-        "../data/pareto_results/gaussian_cluster_1_results.py",
-        "../data/pareto_results/gaussian_cluster_2_results.py",
+        "data/pareto_results/gaussian_mixture_results.py",
+        "data/pareto_results/dijet_results.py",
+        "data/pareto_results/gaussian_cluster_1_results.py",
+        "data/pareto_results/gaussian_cluster_2_results.py",
     ]
 
     # Validate array lengths
