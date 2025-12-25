@@ -7,7 +7,7 @@
 #SBATCH --output=logs/slurm-%j-%N_gis34.out      # the print of xxx.jl will be logged in this file, %N for node name, %j for job id:w
 
 module load StdEnv/2023 julia/1.11.3
-julia --thread=64 sdes_pipeline.jl "gaussian_independent_set_34" "config_gaussian" "false"
+julia --thread=64 sdes_pipeline.jl "gaussian_independent_set34" "config_gaussian" "false"
 
 # module load python/3.12
 # module load scipy-stack
