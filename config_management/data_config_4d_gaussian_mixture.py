@@ -1,0 +1,27 @@
+class DataConfig:
+    data_file_path = "./data/4d_gaussian_samples.csv"
+    processed_data_prefix = "gaussian_4d"
+    columns = ['x1', 'x2', 'x3', 'x4']
+    # mxbins = 300j # Number of bins for marginal distributions
+    # cxbins = 300j # Number of bins for conditional distributions
+    jxbins = 1200j # Number of bins for joint distribution ~1.41*800
+    # b_adj_m = 1.0 # Bandwidth adjustment for KDE adjustment factor on scott's factor for the bandwidth
+    # b_adj_c = 1.0
+    # (Not used) bw_adj_joint = 0.8 # Bandwidth adjustment for joint distribution KDE (Not used)
+    bw_adj_joint_range = (0.4, 1.2) # Range for bandwidth adjustment for joint distribution KDE
+    cv_intervals = 5 # Number of intervals for cross-validation
+    kernel_type = 'gaussian' # Kernel type for KDE
+    reflection_lines = None
+    truncate_range = None
+    # slice_num = 10 # Number of slices for conditional distributions
+    grid_tolerance = 1e-3 # Tolerance for grid generation
+    filter = False
+    filter_threshold = None # Threshold for filtering out low probability values
+    domain_estimation = False # Whether to estimate the domain of the data
+    # domain_factor = 0.9 # Factor to adjust the domain estimation
+    domain_shrink_offset = 1 # Offset to shrink the domain
+    # left_exfactor = 1.0 # Factor to shrink the left domain
+    # right_exfactor = 1.0 # Factor to shrink the right dom
+    slices = [slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins), slice(-12.0, 12.0, jxbins)]
+    density_range_scaling_target = 10.0
+    min_max_scaling = False
