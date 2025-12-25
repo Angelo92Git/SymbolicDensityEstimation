@@ -52,3 +52,4 @@ df.to_csv("./data/independent_set12_4d_gaussian_samples.csv", index=False)
 
 df = pd.DataFrame({'x1': x3, 'x2': x4})
 df.to_csv("./data/independent_set34_4d_gaussian_samples.csv", index=False)
+print("Done")
