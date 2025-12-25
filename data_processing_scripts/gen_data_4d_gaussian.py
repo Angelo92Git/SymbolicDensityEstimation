@@ -22,7 +22,7 @@ x4 = samples[:, 3]
 
 # Save to CSV
 df = pd.DataFrame({'x1': x1, 'x2': x2, 'x3': x3, 'x4': x4})
-df.to_csv("./data/4d_gaussian_samples.csv", index=False)
+df.to_csv("./data/gaussian_4d_samples.csv", index=False)
 
 from pgmpy.estimators import PC
 df = pd.DataFrame(samples[:250000,:], columns=['x1', 'x2', 'x3', 'x4'])
@@ -48,8 +48,8 @@ estimated_model = est.estimate(ci_test='pearsonr')
 # plt.savefig('./data/pgm_dag.png', bbox_inches='tight')
 
 df = pd.DataFrame({'x1': x1, 'x2': x2})
-df.to_csv("./data/independent_set12_4d_gaussian_samples.csv", index=False)
+df.to_csv("./data/gaussian_4d_independent_set12_samples.csv", index=False)
 
 df = pd.DataFrame({'x3': x3, 'x4': x4})
-df.to_csv("./data/independent_set34_4d_gaussian_samples.csv", index=False)
+df.to_csv("./data/gaussian_4d_independent_set34_samples.csv", index=False)
 print("Done")

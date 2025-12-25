@@ -1,6 +1,6 @@
 class DataConfig:
-    data_file_path = "./data/independent_set34_4d_gaussian_samples.csv"
-    processed_data_prefix = "gaussian_independent_34"
+    data_file_path = "./data/gaussian_4d_independent_set34_samples.csv"
+    processed_data_prefix = "gaussian_independent_set34"
     columns = ['x3', 'x4']
     # mxbins = 300j # Number of bins for marginal distributions
     # cxbins = 300j # Number of bins for conditional distributions
