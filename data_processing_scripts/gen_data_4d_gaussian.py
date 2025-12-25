@@ -50,6 +50,6 @@ estimated_model = est.estimate(ci_test='pearsonr')
 df = pd.DataFrame({'x1': x1, 'x2': x2})
 df.to_csv("./data/independent_set12_4d_gaussian_samples.csv", index=False)
 
-df = pd.DataFrame({'x1': x3, 'x2': x4})
+df = pd.DataFrame({'x3': x3, 'x4': x4})
 df.to_csv("./data/independent_set34_4d_gaussian_samples.csv", index=False)
 print("Done")
