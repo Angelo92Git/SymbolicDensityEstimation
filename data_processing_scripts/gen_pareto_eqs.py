@@ -79,10 +79,12 @@ def main():
         'jobresult_gaussian_cluster_1',
         'jobresult_gaussian_cluster_2',
         'jobresult_gaussian_independent_set12',
-        'jobresult_gaussian_independent_set34'
+        'jobresult_gaussian_independent_set34',
+        'jobresults_gaussian_4d'
     ]
 
     post_fixes = [
+        "",
         "",
         "",
         "",
@@ -98,6 +100,7 @@ def main():
         "data/pareto_results/gaussian_cluster_2_results.py",
         "data/pareto_results/gaussian_independent_set12_results.py",
         "data/pareto_results/gaussian_independent_set34_results.py",
+        "data/pareto_results/gaussian_4d_results.py"
     ]
 
     # Validate array lengths
