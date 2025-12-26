@@ -1,0 +1,27 @@
+class DataConfig:
+    data_file_path = "./data/MuonDecay.csv"
+    processed_data_prefix = "muon_decay"
+    columns = ['m13^2', 'm23^2']
+    # mxbins = 300j # Number of bins for marginal distributions
+    # cxbins = 300j # Number of bins for conditional distributions
+    jxbins = 1000j # Number of bins for joint distribution
+    # b_adj_m = 1.0 # Bandwidth adjustment for KDE adjustment factor on scott's factor for the bandwidth
+    # b_adj_c = 1.0
+    # (Not used) bw_adj_joint = 0.8 # Bandwidth adjustment for joint distribution KDE (Not used)
+    bw_adj_joint_range = (0.1, 0.5) # Range for bandwidth adjustment for joint distribution KDE
+    cv_intervals = 11 # Number of intervals for cross-validation
+    kernel_type = 'tri' # Kernel type for KDE
+    reflection_lines = None
+    truncate_range = None
+    # slice_num = 10 # Number of slices for conditional distributions
+    grid_tolerance = 1e-3 # Tolerance for grid generation
+    filter = True
+    filter_threshold = 1e-9 # Threshold for filtering out low probability values
+    domain_estimation = True # Whether to estimate the domain of the data
+    # domain_factor = 0.9 # Factor to adjust the domain estimation
+    domain_shrink_offset = 0.01 # Offset to shrink the domain
+    # left_exfactor = 1.0 # Factor to shrink the left domain
+    # right_exfactor = 1.0 # Factor to shrink the right dom
+    slices = None
+    density_range_scaling_target = 10.0
+    min_max_scaling = True
