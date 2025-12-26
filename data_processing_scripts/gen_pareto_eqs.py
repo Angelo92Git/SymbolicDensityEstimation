@@ -80,7 +80,7 @@ def main():
         'jobresult_gaussian_cluster_2',
         'jobresult_gaussian_independent_set12',
         'jobresult_gaussian_independent_set34',
-        'jobresults_gaussian_4d'
+        'jobresult_gaussian_4d'
     ]
 
     post_fixes = [
