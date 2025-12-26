@@ -24,7 +24,7 @@ const CONFIG_sr = Dict(
     "joint_use_frequency" => true,
     "joint_use_frequency_in_tournament" => true,
     "turbo" => false, # Does not work here
-    "downsample_joint_data" => true,
-    "num_samples_joint_data" => 250000, # Number of samples to use for joint data downsampling
+    "downsample_joint_data" => false,
+    "num_samples_joint_data" => 1000, # Number of samples to use for joint data downsampling
     "elementwise_loss" => LossFunctions.L2DistLoss(),
 )
