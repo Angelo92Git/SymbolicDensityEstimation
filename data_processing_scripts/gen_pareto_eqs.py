@@ -78,6 +78,8 @@ def main():
         'jobresult_dijet',
         'jobresult_gaussian_cluster_1',
         'jobresult_gaussian_cluster_2',
+        'jobresult_gaussian_independent_set12',
+        'jobresult_gaussian_independent_set34'
     ]
 
     post_fixes = [
@@ -85,6 +87,8 @@ def main():
         "",
         "",
         "",
+        "",
+        ""
     ]
 
     out_files = [
@@ -92,6 +96,8 @@ def main():
         "data/pareto_results/dijet_results.py",
         "data/pareto_results/gaussian_cluster_1_results.py",
         "data/pareto_results/gaussian_cluster_2_results.py",
+        "data/pareto_results/gaussian_independent_set12_results.py",
+        "data/pareto_results/gaussian_independent_set34_results.py",
     ]
 
     # Validate array lengths
