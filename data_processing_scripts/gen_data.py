@@ -129,7 +129,6 @@ def main(DataConfig):
     np.random.shuffle(samples)
     train_samples = samples[:int(len(samples)*0.9)]
     test_samples = samples[int(len(samples)*0.9):]
-    np.savetxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_test_samples.csv", test_samples, delimiter=",")
 
     # Avoid any data leakage by using the min and max of the training set only
     samples_min = np.min(train_samples, axis=0)
@@ -144,6 +143,8 @@ def main(DataConfig):
         samples_scaled = samples
         train_samples_scaled = train_samples
         test_samples_scaled = test_samples
+
+    np.savetxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_test_samples.csv", test_samples_scaled, delimiter=",")
 
     # Perform Cross-Validation to find best bw_adj_joint
     print("Performing Cross-Validation for Bandwidth Selection...")
