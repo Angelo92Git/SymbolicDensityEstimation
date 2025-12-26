@@ -102,7 +102,7 @@ def main():
         "data/pareto_results/gaussian_cluster_2_results.py",
         "data/pareto_results/gaussian_independent_set12_results.py",
         "data/pareto_results/gaussian_independent_set34_results.py",
-        "data/pareto_results/gaussian_4d_results.py"
+        "data/pareto_results/gaussian_4d_results.py",
         "data/pareto_results/muon_decay_results.py"
     ]
 
