@@ -56,10 +56,31 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
     kde_all = FFTKDE(bw=bw, kernel=kernel_type)
     kde_all.fit(samples)
     zgrid = kde_all.evaluate(evaluation_grid)
+
+    total_mass_kde_all = np.trapezoid(
+      np.trapezoid(
+        np.trapezoid(
+          np.trapezoid(zgrid, x=evaluation_grid[:, 3], axis=3),
+        x=evaluation_grid[:, 2], axis=2),
+      x=evaluation_grid[:, 1], axis=1),
+    x=evaluation_grid[:, 0], axis=0)
+
+    print("total mass of joint from kde_all:", total_mass_kde_all)
     
     # Wrap the model and verify
     wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit()
     zgrid_wrapper = wrapper.evaluate(evaluation_grid)
+
+    total_mass_wrapper = np.trapezoid(
+      np.trapezoid(
+        np.trapezoid(
+          np.trapezoid(zgrid_wrapper, x=evaluation_grid[:, 3], axis=3),
+        x=evaluation_grid[:, 2], axis=2),
+      x=evaluation_grid[:, 1], axis=1),
+    x=evaluation_grid[:, 0], axis=0)
+
+    print("total mass of joint from wrapper:", total_mass_wrapper)
+    
     if reflection_lines is None:
         assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
         print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
