@@ -228,7 +228,7 @@ def main(DataConfig):
     print("Scoring model on test set...")
     _, wrapper = load_models(DataConfig.processed_data_prefix)
     kde_densities = wrapper.evaluate(test_samples_scaled)
-    neural_densities = model.logprob(test_samples_scaled).to('cpu').detach().numpy()
+    neural_densities = model.log_prob(test_samples_scaled).to('cpu').detach().numpy()
     
     # Handle zeros to avoid -inf
     kde_densities = np.maximum(kde_densities, 1e-10)
