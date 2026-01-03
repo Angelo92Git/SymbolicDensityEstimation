@@ -78,7 +78,6 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
         print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
     
     if model is not None:
-        evaluation_grid = model_params['evaluation_grid']
         param = next(model.parameters())
         evaluation_grid_tensor = torch.from_numpy(evaluation_grid).to(
             dtype=param.dtype,
