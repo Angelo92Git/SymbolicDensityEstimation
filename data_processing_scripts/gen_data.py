@@ -22,7 +22,7 @@ import torch
 import normflows as nf
 from tqdm import tqdm
 from torch.utils.data import TensorDataset, DataLoader
-from neural_spline_flow import setup_data_for_train, setup_model, train_loop
+from data_processing_scripts.neural_spline_flow import setup_data_for_train, setup_model, train_loop
 
 np.random.seed(42)
 
@@ -198,7 +198,7 @@ def main(DataConfig):
         'reflection_lines': DataConfig.reflection_lines
     }
     
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, model=None, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
 
     train_dataloader, test_tensor = setup_data_for_train(train_samples_scaled, test_samples_scaled)
     model = setup_model(train_samples_scaled.shape[1])
