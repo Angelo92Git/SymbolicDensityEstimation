@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=gm_data                            # Job name
-#SBATCH --time=4:00:00                              # Time limit hrs:min:sec
-#SBATCH --gpus-per-node=1
+#SBATCH --partition=gpubase_bygpu_b2                  # interactive GPU
+#SBATCH --time=4:00:00                                # Time limit hrs:min:sec
+#SBATCH --gres=gpu:1
 #SBATCH --ntasks=1                                    # Number of tasks (processes)
 #SBATCH --cpus-per-task=4                             # Number of CPU cores per task (maximum on compute canada is 50)
-#SBATCH --mem-per-cpu=2G                              # Memory per node
+#SBATCH --mem=20G                                     # Memory per node
 #SBATCH --output=logs/slurm-%j-%N_gm_data.out         # the print of xxx.jl will be logged in this file, %N for node name, %j for job id:w
 
 module load python/3.12
