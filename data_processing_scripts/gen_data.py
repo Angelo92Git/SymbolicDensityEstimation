@@ -82,7 +82,7 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
         evaluation_grid_tensor = torch.from_numpy(evaluation_grid).to(dtype=torch.float32)
         batch_size = 512
         zgrid_list = []
-        for i in range(0, evaluation_grid_tensor.shape[0], batch_size):
+        for i in tqdm(range(0, evaluation_grid_tensor.shape[0], batch_size)):
             batch = evaluation_grid_tensor[i : i + batch_size]
             zgrid_list.append(model.log_prob(batch).detach().cpu().numpy())
         zgrid = np.concatenate(zgrid_list)
