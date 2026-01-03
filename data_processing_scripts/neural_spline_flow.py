@@ -67,18 +67,18 @@ def train_loop(model, train_dataloader, save_prefix, max_iter=4000, show_iter=50
             data_iter = iter(train_dataloader)
             x, = next(data_iter)
 
-    # x is already on device due to prior tensor creation
+        # x is already on device due to prior tensor creation
 
-    # Compute loss
-    loss = model.forward_kld(x)
+        # Compute loss
+        loss = model.forward_kld(x)
 
-    # Do backprop and optimizer step
-    if ~(torch.isnan(loss) | torch.isinf(loss)):
-        loss.backward()
-        optimizer.step()
+        # Do backprop and optimizer step
+        if ~(torch.isnan(loss) | torch.isinf(loss)):
+            loss.backward()
+            optimizer.step()
 
-    # Log loss
-    loss_hist = np.append(loss_hist, loss.to('cpu').data.numpy())
+        # Log loss
+        loss_hist = np.append(loss_hist, loss.to('cpu').data.numpy())
 
     # Plot loss
     plt.figure(figsize=(10, 10))
