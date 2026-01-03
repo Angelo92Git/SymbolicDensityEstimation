@@ -94,9 +94,9 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
 
         # Save models
         models_dir = "models"
-        with open(f"{models_dir}/{save_prefix}_neural.pkl", "wb") as f:
+        with open(f"{models_dir}/{save_prefix}.pkl", "wb") as f:
             dill.dump(model, f)
-        print(f"Saved models to {models_dir}/{save_prefix}_neural.pkl")
+        print(f"Saved models to {models_dir}/{save_prefix}.pkl")
     
     if reflection_lines is None:
         assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
