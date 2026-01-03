@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=gm_data                            # Job name
-#SBATCH --time=0-4:00:00                              # Time limit hrs:min:sec
+#SBATCH --time=4:00:00                              # Time limit hrs:min:sec
 #SBATCH --gpus-per-node=1
 #SBATCH --ntasks=1                                    # Number of tasks (processes)
 #SBATCH --cpus-per-task=4                             # Number of CPU cores per task (maximum on compute canada is 50)
