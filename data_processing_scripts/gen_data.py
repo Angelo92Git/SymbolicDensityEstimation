@@ -48,14 +48,14 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, model_params, model, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
+def generate_joint(samples, save_prefix, evaluation_grid, model_params, model, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
+    evaluation_grid = model_params['evaluation_grid']
 
     if model_params is not None:
         # This is specific to the FFTKDE implementation
-        evaluation_grid = model_params['evaluation_grid']
         kernel_type = model_params['kernel_type']
         bw_adj_joint = model_params['bw_adj_joint']
         reflection_lines = model_params['reflection_lines']
@@ -194,17 +194,16 @@ def main(DataConfig):
     model_params = {
         'kernel_type': best_params['kernel_type'],
         'bw_adj_joint': best_params['bw_adj_joint'],
-        'evaluation_grid': evaluation_grid,
         'reflection_lines': DataConfig.reflection_lines
     }
     
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, model=None, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, evaluation_grid=evaluation_grid, model_params=model_params, model=None, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
 
     train_dataloader, test_tensor = setup_data_for_train(train_samples_scaled, test_samples_scaled)
     model = setup_model(train_samples_scaled.shape[1])
     model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix)
 
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", model_params=None, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", evaluation_grid=evaluation_grid, model_params=None, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
 
     # Read and print scale factor
     kde_scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
