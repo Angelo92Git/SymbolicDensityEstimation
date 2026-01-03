@@ -53,7 +53,7 @@ def generate_joint(samples, save_prefix, evaluation_grid, model_params, model, f
 
     d = samples.shape[1]
 
-    if model_params is not None:
+    if model is None:
         # This is specific to the FFTKDE implementation
         kernel_type = model_params['kernel_type']
         bw_adj_joint = model_params['bw_adj_joint']
@@ -203,7 +203,7 @@ def main(DataConfig):
     model = setup_model(train_samples_scaled.shape[1])
     model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix)
 
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", evaluation_grid=evaluation_grid, model_params=None, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", evaluation_grid=evaluation_grid, model_params=model_params, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
 
     # Read and print scale factor
     kde_scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
