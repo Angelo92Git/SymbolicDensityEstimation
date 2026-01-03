@@ -52,7 +52,6 @@ def generate_joint(samples, save_prefix, evaluation_grid, model_params, model, f
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
-    evaluation_grid = model_params['evaluation_grid']
 
     if model_params is not None:
         # This is specific to the FFTKDE implementation
