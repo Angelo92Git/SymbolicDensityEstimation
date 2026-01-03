@@ -7,7 +7,7 @@ from tqdm import tqdm
 import pandas as pd
 from torch.utils.data import TensorDataset, DataLoader
 
-def setup_data_for_train(train_samples, test_samples, device='cpu', batch_size=512, shuffle=True):
+def setup_data_for_train(train_samples, test_samples, device='cpu', batch_size=5000, shuffle=True):
     
     # Convert the DataFrame to a PyTorch Tensor
     train_tensor = torch.tensor(train_samples, dtype=torch.float32).to(device)
