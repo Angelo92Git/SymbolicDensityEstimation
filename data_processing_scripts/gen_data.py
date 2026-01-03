@@ -80,10 +80,9 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
     if model is not None:
         evaluation_grid = model_params['evaluation_grid']
         evaluation_grid_tensor = torch.from_numpy(evaluation_grid).to(dtype=torch.float32)
-        batch_size = 512
+        batch_size = 1024
         zgrid_list = []
-        for i in tqdm(range(0, evaluation_grid_tensor.shape[0], batch_size)):
-            batch = evaluation_grid_tensor[i : i + batch_size]
+        for batch in tqdm(torch.split(evaluation_grid_tensor, batch_size)):
             zgrid_list.append(model.log_prob(batch))
         zgrid = torch.cat(zgrid_list, dim=0).numpy()
         zgrid_wrapper = zgrid
