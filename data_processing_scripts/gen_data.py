@@ -18,6 +18,12 @@ import importlib
 from scipy.spatial import ConvexHull
 from shapely.geometry import Polygon, Point
 
+import torch
+import normflows as nf
+from tqdm import tqdm
+from torch.utils.data import TensorDataset, DataLoader
+from neural_spline_flow import setup_data_for_train, train_loop
+
 np.random.seed(42)
 
 def kde1D(x, bandwidth, xbins, grid_tolerance, **kwargs):
@@ -42,25 +48,45 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
+def generate_joint(samples, save_prefix, model_params, model, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
-    # This is specific to the FFTKDE implementation
-    evaluation_grid = model_params['evaluation_grid']
-    kernel_type = model_params['kernel_type']
-    bw_adj_joint = model_params['bw_adj_joint']
-    reflection_lines = model_params['reflection_lines']
-    bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
-    print(f"Bandwidth: {bw}")
-    kde_all = FFTKDE(bw=bw, kernel=kernel_type)
-    kde_all.fit(samples)
-    zgrid = kde_all.evaluate(evaluation_grid)
-    
-    # Wrap the model and verify
-    wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit()
-    zgrid_wrapper = wrapper.evaluate(evaluation_grid)
 
+    if model_params is not None:
+        # This is specific to the FFTKDE implementation
+        evaluation_grid = model_params['evaluation_grid']
+        kernel_type = model_params['kernel_type']
+        bw_adj_joint = model_params['bw_adj_joint']
+        reflection_lines = model_params['reflection_lines']
+        bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
+        print(f"Bandwidth: {bw}")
+        kde_all = FFTKDE(bw=bw, kernel=kernel_type)
+        kde_all.fit(samples)
+        zgrid = kde_all.evaluate(evaluation_grid)
+    
+        # Wrap the model and verify
+        wrapper = FFTKDEWrapper(kde_all, evaluation_grid, reflection_lines).fit()
+        zgrid_wrapper = wrapper.evaluate(evaluation_grid)
+
+        # Save models
+        models_dir = "models"
+        with open(f"{models_dir}/{save_prefix}_kde.pkl", "wb") as f:
+            dill.dump(kde_all, f)
+        with open(f"{models_dir}/{save_prefix}_kde_wrapped.pkl", "wb") as f:
+            dill.dump(wrapper, f)
+        print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
+    
+    if model is not None:
+        zgrid = model.logprob(evaluation_grid).to('cpu').detach().numpy()
+        zgrid_wrapper = zgrid
+
+        # Save models
+        models_dir = "models"
+        with open(f"{models_dir}/{save_prefix}_neural.pkl", "wb") as f:
+            dill.dump(model, f)
+        print(f"Saved models to {models_dir}/{save_prefix}_neural.pkl")
+    
     if reflection_lines is None:
         assert np.allclose(zgrid, zgrid_wrapper), "Wrapper evaluation does not match base model evaluation on grid points."
         print("Wrapper verification successful: zgrid matches zgrid_wrapper.")
@@ -79,14 +105,6 @@ def generate_joint(samples, save_prefix, model_params, filter, filter_threshold=
             range_mask = mask_x | mask_y
             evaluation_grid = evaluation_grid[~range_mask]
             zgrid_wrapper = zgrid_wrapper[~range_mask]
-
-    # Save models
-    models_dir = "models"
-    with open(f"{models_dir}/{save_prefix}_kde.pkl", "wb") as f:
-        dill.dump(kde_all, f)
-    with open(f"{models_dir}/{save_prefix}_kde_wrapped.pkl", "wb") as f:
-        dill.dump(wrapper, f)
-    print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
 
     joint_data = np.concatenate((evaluation_grid, zgrid_wrapper.reshape(-1, 1)), axis=1)
     if filter and filter_threshold is not None:
@@ -181,20 +199,32 @@ def main(DataConfig):
     }
     
     generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
-    
+
+    train_dataloader, test_tensor = setup_data_for_train(train_samples_scaled, test_samples_scaled)
+    model = setup_model(train_samples_scaled.shape[1])
+    model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix)
+
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", model_params=None, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+
     # Read and print scale factor
-    scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
-    print(f"Scale factor read from file: {scale_factor}")
+    kde_scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
+    print(f"KDE scale factor read from file: {kde_scale_factor}")
+    neural_scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_neural_scale_factor.txt"))
+    print(f"Neural scale factor read from file: {neural_scale_factor}")
 
     # Score model on test set
     print("Scoring model on test set...")
     _, wrapper = load_models(DataConfig.processed_data_prefix)
-    densities = wrapper.evaluate(test_samples_scaled)
+    kde_densities = wrapper.evaluate(test_samples_scaled)
+    neural_densities = model.logprob(test_samples_scaled).to('cpu').detach().numpy()
     
     # Handle zeros to avoid -inf
-    densities = np.maximum(densities, 1e-10)
-    log_likelihood = np.sum(np.log(densities))
-    print(f"Test Set Log-Likelihood: {log_likelihood}")
+    kde_densities = np.maximum(kde_densities, 1e-10)
+    neural_densities = np.maximum(neural_densities, 1e-10)
+    kde_log_likelihood = np.sum(np.log(kde_densities))
+    neural_log_likelihood = np.sum(np.log(neural_densities))
+    print(f"KDE Test Set Log-Likelihood: {kde_log_likelihood}")
+    print(f"Neural Test Set Log-Likelihood: {neural_log_likelihood}")
     
     print("done!")
 
