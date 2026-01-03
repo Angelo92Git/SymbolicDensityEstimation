@@ -52,13 +52,13 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
+    evaluation_grid = model_params['evaluation_grid']
+    reflection_lines = model_params['reflection_lines']
 
     if model is None:
         # This is specific to the FFTKDE implementation
-        evaluation_grid = model_params['evaluation_grid']
         kernel_type = model_params['kernel_type']
         bw_adj_joint = model_params['bw_adj_joint']
-        reflection_lines = model_params['reflection_lines']
         bw = bw_adj_joint * scipy.stats.gaussian_kde(samples.T).scotts_factor()
         print(f"Bandwidth: {bw}")
         kde_all = FFTKDE(bw=bw, kernel=kernel_type)
@@ -90,7 +90,6 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
         with torch.no_grad():
             for batch in tqdm(torch.split(evaluation_grid_tensor, batch_size)):
                 zgrid_list.append(model.log_prob(batch))
-                print(zgrid_list[-1].numpy())
         zgrid = torch.cat(zgrid_list, dim=0).numpy()
         zgrid_wrapper = zgrid
 
