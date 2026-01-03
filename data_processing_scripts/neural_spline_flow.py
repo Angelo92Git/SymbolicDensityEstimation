@@ -15,14 +15,16 @@ def setup_data_for_train(train_samples, test_samples, device='cpu', batch_size=5
 
     # Create a TensorDataset
     train_dataset = TensorDataset(train_tensor)
+    test_dataset = TensorDataset(test_tensor)
 
     # Create a DataLoader with a batch size of 512
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=shuffle)
 
     print(f"DataLoader created for two_modal_samples_df with batch size {batch_size}.")
     print(f"Number of batches: {len(train_dataloader)}")
 
-    return train_dataloader, test_tensor
+    return train_dataloader, test_dataloader
 
 
 def setup_model(latent_size, K=16, seed=42, hidden_units=128, hidden_layers=2, trainable=False, device='cpu'):

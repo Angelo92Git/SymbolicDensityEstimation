@@ -48,13 +48,14 @@ def read_file(file_path, columns):
     samples = df[columns].to_numpy()
     return samples
 
-def generate_joint(samples, save_prefix, evaluation_grid, model_params, model, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
+def generate_joint(samples, save_prefix, model_params, model, filter, filter_threshold=None, domain_estimation=False, domain_shrink_offset=None, density_range_scaling_target=None, truncate_range=None):
     print("generating joint distribution samples...")
 
     d = samples.shape[1]
 
     if model is None:
         # This is specific to the FFTKDE implementation
+        evaluation_grid = model_params['evaluation_grid']
         kernel_type = model_params['kernel_type']
         bw_adj_joint = model_params['bw_adj_joint']
         reflection_lines = model_params['reflection_lines']
@@ -77,8 +78,14 @@ def generate_joint(samples, save_prefix, evaluation_grid, model_params, model, f
         print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
     
     if model is not None:
+        evaluation_grid = model_params['evaluation_grid']
         evaluation_grid_tensor = torch.from_numpy(evaluation_grid).to(dtype=torch.float32)
-        zgrid = model.log_prob(evaluation_grid_tensor).to('cpu').detach().numpy()
+        batch_size = 512
+        zgrid_list = []
+        for i in range(0, evaluation_grid_tensor.shape[0], batch_size):
+            batch = evaluation_grid_tensor[i : i + batch_size]
+            zgrid_list.append(model.log_prob(batch).detach().cpu().numpy())
+        zgrid = np.concatenate(zgrid_list)
         zgrid_wrapper = zgrid
 
         # Save models
@@ -192,18 +199,20 @@ def main(DataConfig):
     print(f"Cross-Validation Complete. Best Params: {best_params}")
 
     model_params = {
+        'evaluation_grid': evaluation_grid,
         'kernel_type': best_params['kernel_type'],
         'bw_adj_joint': best_params['bw_adj_joint'],
         'reflection_lines': DataConfig.reflection_lines
     }
     
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, evaluation_grid=evaluation_grid, model_params=model_params, model=None, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, model=None, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
 
-    train_dataloader, test_tensor = setup_data_for_train(train_samples_scaled, test_samples_scaled)
+    train_dataloader, test_dataloader = setup_data_for_train(train_samples_scaled, test_samples_scaled)
     model = setup_model(train_samples_scaled.shape[1])
     model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix)
 
-    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", evaluation_grid=evaluation_grid, model_params=model_params, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    model_params['test_dataloader'] = test_dataloader
+    generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", model_params=model_params, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
 
     # Read and print scale factor
     kde_scale_factor = float(np.loadtxt(f"./data/processed_data/{DataConfig.processed_data_prefix}_scale_factor.txt"))
