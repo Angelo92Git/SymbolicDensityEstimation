@@ -90,7 +90,7 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
         with torch.no_grad():
             for batch in tqdm(torch.split(evaluation_grid_tensor, batch_size)):
                 zgrid_list.append(model.log_prob(batch))
-                print(zgrid_list[-1].cpu())
+                print(zgrid_list[-1].numpy())
         zgrid = torch.cat(zgrid_list, dim=0).numpy()
         zgrid_wrapper = zgrid
 
