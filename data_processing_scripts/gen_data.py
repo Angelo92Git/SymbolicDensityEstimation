@@ -233,7 +233,7 @@ def main(DataConfig):
         dtype=param.dtype,
         device=param.device
     )
-    neural_densities = model.log_prob(test_samples_scaled_tensor).to('cpu', dtype).detach().numpy()
+    neural_densities = model.log_prob(test_samples_scaled_tensor).to('cpu').detach().numpy()
     
     # Handle zeros to avoid -inf
     kde_densities = np.maximum(kde_densities, 1e-10)
