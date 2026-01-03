@@ -77,7 +77,8 @@ def generate_joint(samples, save_prefix, evaluation_grid, model_params, model, f
         print(f"Saved models to {models_dir}/{save_prefix}_kde.pkl and {models_dir}/{save_prefix}_kde_wrapped.pkl")
     
     if model is not None:
-        zgrid = model.log_prob(evaluation_grid).to('cpu').detach().numpy()
+        evaluation_grid_tensor = torch.from_numpy(evaluation_grid)
+        zgrid = model.log_prob(evaluation_grid_tensor).to('cpu').detach().numpy()
         zgrid_wrapper = zgrid
 
         # Save models
