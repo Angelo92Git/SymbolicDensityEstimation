@@ -22,7 +22,7 @@ import torch
 import normflows as nf
 from tqdm import tqdm
 from torch.utils.data import TensorDataset, DataLoader
-from neural_spline_flow import setup_data_for_train, train_loop
+from neural_spline_flow import setup_data_for_train, setup_model, train_loop
 
 np.random.seed(42)
 
