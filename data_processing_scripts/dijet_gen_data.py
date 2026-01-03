@@ -35,7 +35,7 @@ HT = HT.reshape(-1, 1)
 scaled_samples = np.hstack((mjj, HT))
 d = scaled_samples.shape[1]
 jxbins = DataConfig().jxbins
-bw_adj_joint = DataConfig().bw_adj_joint
+bw_adj_joint = 0.3
 kernel_type = DataConfig().kernel_type
 slices = [slice(-1.1, 1.1, jxbins), slice(-1.1, 1.1, jxbins)]
 grids = np.mgrid[tuple(slices)]
@@ -134,4 +134,4 @@ sum_final = sum_unmasked[~range_mask]
 
 # Stack into columns and save as CSV
 data = np.column_stack((x_final, y_final, sum_final))
-np.savetxt("./data/processed_data/dijet_joint_data.csv", data, delimiter=",", comments='')
+np.savetxt("./data/processed_data/dijet_joint_data_old.csv", data, delimiter=",", comments='')
