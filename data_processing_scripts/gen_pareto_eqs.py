@@ -82,10 +82,12 @@ def main():
         'jobresult_gaussian_independent_set34',
         'jobresult_gaussian_4d',
         'jobresult_muon_decay',
+        'jobresult_muon_decay_neural',
         'jobresult_rastrigin'
     ]
 
     post_fixes = [
+        "",
         "",
         "",
         "",
@@ -106,6 +108,7 @@ def main():
         "data/pareto_results/gaussian_independent_set34_results.py",
         "data/pareto_results/gaussian_4d_results.py",
         "data/pareto_results/muon_decay_results.py",
+        "data/pareto_results/muon_decay_neural_results.py",
         "data/pareto_results/rastrigin_results.py"
     ]
 
