@@ -213,7 +213,7 @@ def main(DataConfig):
 
     train_dataloader, test_dataloader = setup_data_for_train(train_samples_scaled, test_samples_scaled)
     model = setup_model(train_samples_scaled.shape[1])
-    model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix)
+    model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix, lr=DataConfig.lr)
 
     model_params['test_dataloader'] = test_dataloader
     generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix+"_neural", model_params=model_params, model=model, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
