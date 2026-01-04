@@ -55,7 +55,7 @@ def train_loop(model, train_dataloader, save_prefix, max_iter=4000, show_iter=50
     # Create an iterator for the dataloader
     data_iter = iter(train_dataloader)
 
-    for it in tqdm(range(max_iter)):
+    for it in range(max_iter):
         optimizer.zero_grad()
 
         try:
@@ -79,6 +79,9 @@ def train_loop(model, train_dataloader, save_prefix, max_iter=4000, show_iter=50
 
         # Log loss
         loss_hist = np.append(loss_hist, loss.to('cpu').data.numpy())
+
+        if (it + 1) % (max_iter // 10) == 0:
+            print(f"Training progress: {(it + 1) * 100 // max_iter}%")
 
     # Plot loss
     plt.figure(figsize=(10, 10))
