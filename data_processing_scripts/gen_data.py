@@ -233,13 +233,13 @@ def main(DataConfig):
         dtype=param.dtype,
         device=param.device
     )
-    neural_densities = model.log_prob(test_samples_scaled_tensor).to('cpu').detach().numpy()
+    neural_log_densities = model.log_prob(test_samples_scaled_tensor).to('cpu').detach().numpy()
     
     # Handle zeros to avoid -inf
     kde_densities = np.maximum(kde_densities, 1e-10)
-    neural_densities = np.maximum(neural_densities, 1e-10)
+    neural_log_densities = np.maximum(neural_log_densities, 1e-10)
     kde_log_likelihood = np.sum(np.log(kde_densities))
-    neural_log_likelihood = np.sum(np.log(neural_densities))
+    neural_log_likelihood = np.sum(neural_log_densities)
     print(f"KDE Test Set Log-Likelihood: {kde_log_likelihood}")
     print(f"Neural Test Set Log-Likelihood: {neural_log_likelihood}")
     
