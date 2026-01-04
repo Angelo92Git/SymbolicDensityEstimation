@@ -19,3 +19,4 @@ class DataConfig:
     density_range_scaling_target = None # Target for density range scaling
     min_max_scaling = True
     truncate_range = None # Range to truncate the data, typically use after reflection trick since we don't want to truncate the domain prematurely
+    lr=5e-5

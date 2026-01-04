@@ -25,3 +25,4 @@ class DataConfig:
     slices = None
     density_range_scaling_target = 10.0
     min_max_scaling = True
+    lr=5e-4

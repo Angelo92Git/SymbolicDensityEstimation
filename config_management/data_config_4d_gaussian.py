@@ -25,3 +25,4 @@ class DataConfig:
     slices = [slice(-13.0, 13.0, jxbins), slice(-13.0, 13.0, jxbins), slice(-13.0, 13.0, jxbins), slice(-13.0, 13.0, jxbins)]
     density_range_scaling_target = 10.0
     min_max_scaling = False
+    lr=5e-4
