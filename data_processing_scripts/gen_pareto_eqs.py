@@ -76,6 +76,7 @@ def main():
     prefixes = [
         'jobresult_gaussian_mixture',
         'jobresult_dijet',
+        'jobresult_dijet_neural',
         'jobresult_gaussian_cluster_1',
         'jobresult_gaussian_cluster_2',
         'jobresult_gaussian_independent_set12',
@@ -96,12 +97,14 @@ def main():
         "",
         "",
         "",
+        "",
         ""
     ]
 
     out_files = [
         "data/pareto_results/gaussian_mixture_results.py",
         "data/pareto_results/dijet_results.py",
+        "data/pareto_results/dijet_neural_results.py",
         "data/pareto_results/gaussian_cluster_1_results.py",
         "data/pareto_results/gaussian_cluster_2_results.py",
         "data/pareto_results/gaussian_independent_set12_results.py",
