@@ -86,9 +86,13 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
         batch_size = 5000
         zgrid_list = []
         model.eval()
+        total_batches = (len(evaluation_grid_tensor) + batch_size - 1) // batch_size
         with torch.no_grad():
-            for batch in tqdm(torch.split(evaluation_grid_tensor, batch_size)):
+            for batch in torch.split(evaluation_grid_tensor, batch_size):
                 zgrid_list.append(torch.exp(model.log_prob(batch)))
+                if (len(zgrid_list) * 10) // total_batches > ((len(zgrid_list) - 1) * 10) // total_batches:
+                    print(f"Progress: {(len(zgrid_list) * 10 // total_batches) * 10}%")
+
         zgrid = torch.cat(zgrid_list, dim=0).numpy()
         zgrid_wrapper = zgrid
 
