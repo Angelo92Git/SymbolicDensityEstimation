@@ -45,7 +45,7 @@ def setup_model(latent_size, K=16, seed=42, hidden_units=128, hidden_layers=2, t
     return model
 
 
-def train_loop(model, train_dataloader, save_prefix, max_iter=4000, show_iter=500, lr=5e-4, weight_decay=1e-5):
+def train_loop(model, train_dataloader, save_prefix, max_iter=25000, show_iter=500, lr=3e-5, weight_decay=1e-5):
 
     # Train model
     loss_hist = np.array([])
