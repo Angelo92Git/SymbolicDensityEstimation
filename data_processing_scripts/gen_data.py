@@ -93,7 +93,7 @@ def generate_joint(samples, save_prefix, model_params, model, filter, filter_thr
                 if (len(zgrid_list) * 10) // total_batches > ((len(zgrid_list) - 1) * 10) // total_batches:
                     print(f"Progress: {(len(zgrid_list) * 10 // total_batches) * 10}%")
 
-        zgrid = torch.cat(zgrid_list, dim=0).numpy()
+        zgrid = torch.cat(zgrid_list, dim=0).to('cpu').numpy()
         zgrid_wrapper = zgrid
 
         # Save models
