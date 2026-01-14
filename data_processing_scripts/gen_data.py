@@ -214,9 +214,12 @@ def main(DataConfig):
     }
     
     generate_joint(train_samples_scaled, save_prefix=DataConfig.processed_data_prefix, model_params=model_params, model=None, filter=DataConfig.filter, filter_threshold=DataConfig.filter_threshold, domain_estimation=DataConfig.domain_estimation, domain_shrink_offset=DataConfig.domain_shrink_offset, density_range_scaling_target=DataConfig.density_range_scaling_target, truncate_range=DataConfig.truncate_range)
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
 
-    train_dataloader, test_dataloader = setup_data_for_train(train_samples_scaled, test_samples_scaled)
-    model = setup_model(train_samples_scaled.shape[1])
+    train_dataloader, test_dataloader = setup_data_for_train(train_samples_scaled, test_samples_scaled, device=device)
+    model = setup_model(train_samples_scaled.shape[1], device=device)
     model = train_loop(model, train_dataloader, DataConfig.processed_data_prefix, lr=DataConfig.lr)
 
     model_params['test_dataloader'] = test_dataloader
