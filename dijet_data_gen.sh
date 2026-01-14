@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=dijet_data                            # Job name
 #SBATCH --partition=gpubase_bygpu_b2                  # interactive GPU
-#SBATCH --time=4:00:00                                # Time limit hrs:min:sec
+#SBATCH --time=8:00:00                                # Time limit hrs:min:sec
 #SBATCH --gres=gpu:1
 #SBATCH --ntasks=1                                    # Number of tasks (processes)
 #SBATCH --cpus-per-task=4                             # Number of CPU cores per task (maximum on compute canada is 50)
