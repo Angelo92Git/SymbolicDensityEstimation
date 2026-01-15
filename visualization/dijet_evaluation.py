@@ -71,8 +71,22 @@ def _load_kde_model(models_dir: Path) -> object:
 
 
 def _load_nf_model(models_dir: Path) -> torch.nn.Module:
+    # Save original torch.load
+    _original_torch_load = torch.load
+
+    def cpu_only_load(*args, **kwargs):
+        kwargs["map_location"] = torch.device("cpu")
+        return _original_torch_load(*args, **kwargs)
+
+    # Monkey-patch
+    torch.load = cpu_only_load
+
     with (models_dir / "dijet_neural.pkl").open("rb") as f:
         model = dill.load(f)
+
+    # Restore torch.load
+    torch.load = _original_torch_load
+
     if not isinstance(model, torch.nn.Module):
         raise TypeError("Loaded dijet_neural.pkl is not a torch.nn.Module")
     model.eval()
