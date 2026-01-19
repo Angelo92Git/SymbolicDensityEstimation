@@ -3,7 +3,7 @@ pow3(x) = x^3
 pow4(x) = x^4
 pow5(x) = x^5
 
-function hybrid_loss(prediction, target)
+function hybrid_loss(prediction, target, weight)
     # Target -1.0 indicates a raw sample point for NLL
     if target == -1.0
         # Robust NLL: Penalize <= 0 predictions heavily
