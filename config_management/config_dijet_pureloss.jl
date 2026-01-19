@@ -27,7 +27,7 @@ function build_loss_function(total_volume::Float32)
             # Penalize <= 0 predictions heavily
             pos_mask = sample_preds .> 1e-9f0
             n_neg = count(.!pos_mask)
-            L_penalty = n_neg * 1e6f0
+            L_penalty = n_neg * 1e1f0
 
             if any(pos_mask)
                 L_nll = -mean(log.(sample_preds[pos_mask]))
