@@ -101,7 +101,7 @@ if cfg_sr["downsample_joint_data"]
 end
 
 # Initialize weights for the grid data (all 1.0)
-weights = ones(Float32, nrow(df_j))
+weights = ones(Float64, nrow(df_j))
 
 # Handle Hybrid Data (Raw Samples)
 if haskey(cfg_sr, "use_hybrid_data") && cfg_sr["use_hybrid_data"]
