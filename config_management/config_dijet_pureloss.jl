@@ -7,29 +7,30 @@ pow5(x) = x^5
 
 # Loss Factory Function
 # Numerically safer / type-stable Loss Factory
+# Numerically safer / type-stable Loss Factory (no `const` inside function)
 function build_loss_function(total_volume::Real = 1.0)
-    # Working precision (use Float64 to match dataset in your stack)
+    # Working precision (use Float64 to match your BasicDataset{Float64,...})
     V_tot = float(total_volume)          # domain volume as Float64
-    const BIG_LOSS = 1.0e9               # returned when tree evaluation fails
-    const EPS_LOG = 1.0e-12              # clamp for logs (prevents -Inf)
-    const PENALTY_PER_NONPOS = 1.0e3     # penalty for non-positive sample preds
-    const WEIGHT_NEG = 1.0               # weight for negativity penalty
-    const WEIGHT_NORM = 1.0              # weight for normalization penalty
-    const WEIGHT_NLL = 1.0               # weight for sample NLL
+    BIG_LOSS = 1.0e9                     # returned when tree evaluation fails
+    EPS_LOG = 1.0e-12                    # clamp for logs (prevents -Inf)
+    PENALTY_PER_NONPOS = 1.0e3           # penalty for non-positive sample preds
+    WEIGHT_NEG = 1.0                     # weight for negativity penalty
+    WEIGHT_NORM = 1.0                    # weight for normalization penalty
+    WEIGHT_NLL = 1.0                     # weight for sample NLL
 
     function custom_loss_closure(tree, dataset::Dataset, options)
         # Evaluate tree
         preds_raw, completed = eval_tree_array(tree, dataset.X, options)
         if !completed
-            return BIG_LOSS
+            return Float64(BIG_LOSS)
         end
 
         # Ensure numeric type consistency
-        preds = Float64.(preds_raw)    # predictions may come as Float64 already
+        preds = Float64.(preds_raw)    # predictions may already be Float64
         y = Float64.(dataset.y)        # dataset.y -> Float64
 
         # Identify samples vs grid points
-        is_sample = y .==  -1.0
+        is_sample = y .== -1.0
 
         ############
         # NLL on Samples (stable)
