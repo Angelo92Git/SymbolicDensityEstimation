@@ -6,60 +6,81 @@ pow4(x) = x^4
 pow5(x) = x^5
 
 # Loss Factory Function
-function build_loss_function(total_volume::Float32)
-    function custom_loss_closure(tree, dataset::Dataset, options)
-        V_tot = total_volume
+# Numerically safer / type-stable Loss Factory
+function build_loss_function(total_volume::Real = 1.0)
+    # Working precision (use Float64 to match dataset in your stack)
+    V_tot = float(total_volume)          # domain volume as Float64
+    const BIG_LOSS = 1.0e9               # returned when tree evaluation fails
+    const EPS_LOG = 1.0e-12              # clamp for logs (prevents -Inf)
+    const PENALTY_PER_NONPOS = 1.0e3     # penalty for non-positive sample preds
+    const WEIGHT_NEG = 1.0               # weight for negativity penalty
+    const WEIGHT_NORM = 1.0              # weight for normalization penalty
+    const WEIGHT_NLL = 1.0               # weight for sample NLL
 
-        preds, completed = eval_tree_array(tree, dataset.X, options)
+    function custom_loss_closure(tree, dataset::Dataset, options)
+        # Evaluate tree
+        preds_raw, completed = eval_tree_array(tree, dataset.X, options)
         if !completed
-            return Float32(1e9)
+            return BIG_LOSS
         end
 
-        y = dataset.y
-        is_sample = y .== -1.0f0
+        # Ensure numeric type consistency
+        preds = Float64.(preds_raw)    # predictions may come as Float64 already
+        y = Float64.(dataset.y)        # dataset.y -> Float64
 
-        # NLL on Samples
+        # Identify samples vs grid points
+        is_sample = y .==  -1.0
+
+        ############
+        # NLL on Samples (stable)
+        ############
+        L_nll = 0.0
         sample_preds = preds[is_sample]
-        if isempty(sample_preds)
-            L_nll = 0.0f0
-        else
-            # Stable Log
-            # Penalize <= 0 predictions heavily
-            pos_mask = sample_preds .> 1e-9f0
-            n_neg = count(.!pos_mask)
-            L_penalty = n_neg * 1e1f0
+        if !isempty(sample_preds)
+            # mask of strictly positive predictions
+            pos_mask = sample_preds .> 0.0
+            n_nonpos = count(.!pos_mask)
+
+            # penalty for non-positive predictions
+            L_penalty = n_nonpos * PENALTY_PER_NONPOS
 
             if any(pos_mask)
-                L_nll = -mean(log.(sample_preds[pos_mask]))
+                # clamp to EPS_LOG to avoid log(0); use safe_preds only for log
+                safe_preds = max.(sample_preds[pos_mask], EPS_LOG)
+                # negative log-likelihood (mean of -log p)
+                L_nll = -mean(log.(safe_preds))
             else
-                L_nll = 0.0f0
+                # no strictly positive predictions -> large NLL
+                L_nll = PENALTY_PER_NONPOS * 10.0
             end
+
             L_nll += L_penalty
+            L_nll *= WEIGHT_NLL
         end
 
+        ############
         # Constraints on Grid
+        ############
+        L_cons = 0.0
         grid_preds = preds[.!is_sample]
-        if isempty(grid_preds)
-            L_cons = 0.0f0
-        else
-            # Negativity (L2 on negative part)
-            neg_vals = min.(grid_preds, 0.0f0)
+        if !isempty(grid_preds)
+            # negativity penalty (L2 on negative part)
+            neg_vals = min.(grid_preds, 0.0)   # <= 0 values (negatives)
             L_neg = sum(neg_vals .^ 2)
 
-            # Integral Estimation (Monte Carlo over Batch)
-            # Integral = Mean(f) * Volume_Domain
+            # Integral (Monte Carlo over the batch)
             ProbMass = mean(grid_preds) * V_tot
-            L_norm = (ProbMass - 1.0f0)^2
+            L_norm = (ProbMass - 1.0)^2
 
-            # Weighted Constraints
-            # Reduced weights to allow exploration
-            L_cons = 1.0f0 * L_neg + 1.0f0 * L_norm
+            L_cons = WEIGHT_NEG * L_neg + WEIGHT_NORM * L_norm
         end
 
-        return L_nll + L_cons
+        return Float64(L_nll + L_cons)
     end
+
     return custom_loss_closure
 end
+
 
 const CONFIG_sr = Dict(
     "binary_operators" => [+, -, *, /],
