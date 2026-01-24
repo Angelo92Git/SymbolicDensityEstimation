@@ -77,6 +77,8 @@ def main():
         'jobresult_gaussian_mixture',
         'jobresult_dijet',
         'jobresult_dijet_neural',
+        'jobresult_dijet_hybrid_neural',
+        'jobresult_dijet_pure_neural',
         'jobresult_gaussian_cluster_1',
         'jobresult_gaussian_cluster_2',
         'jobresult_gaussian_independent_set12',
@@ -98,6 +100,8 @@ def main():
         "",
         "",
         "",
+        "",
+        "",
         ""
     ]
 
@@ -105,6 +109,8 @@ def main():
         "data/pareto_results/gaussian_mixture_results.py",
         "data/pareto_results/dijet_results.py",
         "data/pareto_results/dijet_neural_results.py",
+        "data/pareto_results/dijet_hybrid_neural_results.py",
+        "data/pareto_results/dijet_pure_neural_results.py",
         "data/pareto_results/gaussian_cluster_1_results.py",
         "data/pareto_results/gaussian_cluster_2_results.py",
         "data/pareto_results/gaussian_independent_set12_results.py",

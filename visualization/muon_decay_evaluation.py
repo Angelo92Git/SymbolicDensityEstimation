@@ -308,8 +308,8 @@ def _format_block(label: str, square: Square, results: dict[str, float]) -> str:
 
 
 def _iter_squares(square_size: float) -> Iterable[tuple[str, Square]]:
-    yield "square_(0.01,0.01)", Square(x0=0.01, y0=0.01, size=square_size)
-    yield "square_(0.03,0.03)", Square(x0=0.03, y0=0.03, size=square_size)
+    yield "square_(0.03,0.2)", Square(x0=0.03, y0=0.2, size=square_size)
+    yield "square_(0.3,0.4)", Square(x0=0.3, y0=0.4, size=square_size)
 
 
 def main() -> int:
