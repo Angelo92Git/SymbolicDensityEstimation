@@ -242,6 +242,9 @@ sr_options_kwargs = Dict(
 if haskey(cfg_sr, "loss_function_instance")
     sr_options_kwargs[:loss_function] = cfg_sr["loss_function_instance"]
     println("Using Custom Loss Function from Factory.")
+elseif haskey(cfg_sr, "loss_function")
+    sr_options_kwargs[:loss_function] = cfg_sr["loss_function"]
+    println("Using Custom Loss Function from Config.")
 elseif haskey(cfg_sr, "elementwise_loss")
     sr_options_kwargs[:elementwise_loss] = cfg_sr["elementwise_loss"]
     println("Using Elementwise Loss.")
