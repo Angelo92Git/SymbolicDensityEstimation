@@ -19,23 +19,55 @@ function old_hybrid_loss(prediction, target, weight)
 end
 
 function hybrid_loss(tree, dataset::Dataset{T,L}, options, idx)::L where {T,L}
-      prediction, flag = eval_tree_array(tree, dataset.X[:,idx], options)
+      # Handle batching vs full dataset
+      if idx === nothing
+          X = dataset.X
+          y = dataset.y
+      else
+          X = dataset.X[:, idx]
+          y = dataset.y[idx]
+      end
+      
+      prediction, flag = eval_tree_array(tree, X, options)
       if !flag
           return L(Inf)
       end
       is_neg_prediction = prediction .<= 1e-9
-      is_sample = dataset.y[idx] .< 0
+      # Sentinel -1.0 logic for samples
+      is_sample = y .< 0
+      
       num_samples = sum(is_sample)
       num_grid = sum(.!is_sample)
+      
       num_neg_predict_samples = sum(is_sample .&& is_neg_prediction)
-      nll_term = (sum(-log.(prediction[is_sample .&& .!is_neg_prediction]))+num_neg_predict_samples*100)/num_samples
-      mse_term = sum((prediction[.!is_sample] .- dataset.y[.!is_sample]) .^ 2) / num_grid
+      
+      if num_samples > 0
+          # NLL on samples (subset where y < 0)
+          # Only take log of positive predictions
+          valid_pos_preds = prediction[is_sample .&& .!is_neg_prediction]
+          if !isempty(valid_pos_preds)
+              nll_sum = sum(-log.(valid_pos_preds))
+          else
+              nll_sum = 0.0
+          end
+          nll_term = (nll_sum + num_neg_predict_samples * 100.0) / num_samples
+      else
+          nll_term = 0.0
+      end
+      
+      if num_grid > 0
+          # MSE on grid (subset where y >= 0)
+          mse_term = sum((prediction[.!is_sample] .- y[.!is_sample]) .^ 2) / num_grid
+      else
+          mse_term = 0.0
+      end
+
       if num_samples > 0 && num_grid > 0
-          return 0.1*nll_term + mse_term
+          return 0.1 * nll_term + mse_term
       elseif num_samples == 0 && num_grid > 0
           return mse_term
       elseif num_samples > 0 && num_grid == 0
-          return 0.1*nll_term
+          return 0.1 * nll_term
       else
         return L(Inf)
       end
