@@ -32,7 +32,7 @@ function hybrid_loss(tree, dataset::Dataset{T,L}, options, idx)::L where {T,L}
       if !flag
           return L(Inf)
       end
-      is_neg_prediction = prediction .<= 1e-9
+      is_neg_prediction = prediction .<= 0
       # Sentinel -1.0 logic for samples
       is_sample = y .< 0
       
