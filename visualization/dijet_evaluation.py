@@ -338,7 +338,7 @@ def _format_row(label: str, results: dict[str, float]) -> str:
 
 def _iter_squares(square_size: float) -> Iterable[tuple[str, Square]]:
     yield "square_(0.01,0.01)", Square(x0=0.01, y0=0.01, size=square_size)
-    yield "square_(0.03,0.03)", Square(x0=0.03, y0=0.03, size=square_size)
+    yield "square_(0.05,0.07)", Square(x0=0.05, y0=0.07, size=square_size)
 
 
 def main() -> int:
@@ -375,8 +375,8 @@ def main() -> int:
     parser.add_argument(
         "--sr-results",
         type=Path,
-        default=Path("data/pareto_results/dijet_neural_results.py"),
-        help="SR pareto results python file (default: data/pareto_results/dijet_neural_results.py).",
+        default=Path("data/pareto_results/dijet_hybrid_neural_results.py"),
+        help="SR pareto results python file (default: data/pareto_results/dijet_hybrid_neural_results.py).",
     )
     parser.add_argument(
         "--sr-index",
@@ -412,7 +412,7 @@ def main() -> int:
     samples_path = _resolve_repo_path(args.samples)
     samples_raw_path = _resolve_repo_path(args.samples_raw)
     models_dir = _resolve_repo_path(args.models_dir) or _REPO_ROOT / "models"
-    sr_results_path = _resolve_repo_path(args.sr_results) or (_REPO_ROOT / "data/pareto_results/dijet_neural_results.py")
+    sr_results_path = _resolve_repo_path(args.sr_results) or (_REPO_ROOT / "data/pareto_results/dijet_hybrid_neural_results.py")
 
     if samples_raw_path is not None and not samples_raw_path.exists():
         raise FileNotFoundError(f"Raw samples file not found: {samples_raw_path}")
