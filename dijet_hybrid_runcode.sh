@@ -7,7 +7,7 @@
 #SBATCH --output=logs/slurm-%j-%N_dijet_hyb.out     # the print of xxx.jl will be logged in this file, %N for node name, %j for job id:w
 
 module load StdEnv/2023 julia/1.11.3
-julia --thread=64 sdes_pipeline.jl "dijet_neural" "config_dijet_hybridloss" "false"
+julia --thread=64 sdes_pipeline_custom_loss.jl "dijet_neural" "config_dijet_hybridloss" "false"
 
 # module load python/3.12
 # module load scipy-stack
