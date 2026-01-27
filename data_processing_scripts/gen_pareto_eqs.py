@@ -78,6 +78,8 @@ def main():
         'jobresult_dijet',
         'jobresult_dijet_neural',
         'jobresult_dijet_hybrid_neural',
+        'jobresult_dijet_hardhybrid_neural',
+        'jobresult_dijet_nphybrid_neural',
         'jobresult_dijet_pure_neural',
         'jobresult_gaussian_cluster_1',
         'jobresult_gaussian_cluster_2',
@@ -102,6 +104,8 @@ def main():
         "",
         "",
         "",
+        "",
+        "",
         ""
     ]
 
@@ -110,6 +114,8 @@ def main():
         "data/pareto_results/dijet_results.py",
         "data/pareto_results/dijet_neural_results.py",
         "data/pareto_results/dijet_hybrid_neural_results.py",
+        "data/pareto_results/dijet_hardhybrid_neural_results.py",
+        "data/pareto_results/dijet_nphybrid_neural_results.py",
         "data/pareto_results/dijet_pure_neural_results.py",
         "data/pareto_results/gaussian_cluster_1_results.py",
         "data/pareto_results/gaussian_cluster_2_results.py",
