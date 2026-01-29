@@ -1,0 +1,300 @@
+python -m data_processing_scripts.gen_data data_config_2d_gaussian_mixture
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0258 (std: 0.0040)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.48), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0245 (std: 0.0041)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.56), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0235 (std: 0.0039)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.64), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0229 (std: 0.0040)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0226 (std: 0.0040)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.7999999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0224 (std: 0.0040)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0224 (std: 0.0039)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.96), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0225 (std: 0.0039)
+Testing combination 9/11: {'bw_adj_joint': np.float64(1.04), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0227 (std: 0.0039)
+Testing combination 10/11: {'bw_adj_joint': np.float64(1.1199999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0230 (std: 0.0038)
+Testing combination 11/11: {'bw_adj_joint': np.float64(1.2), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.0234 (std: 0.0038)
+
+Best score: -3.0224 with params: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.10052650564770083
+Saved models to models/gaussian_mixture_kde.pkl and models/gaussian_mixture_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 77.11711358644611
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 90
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_2d_gaussian_cluster_1
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3310 (std: 0.0024)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.48), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3298 (std: 0.0022)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.56), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3291 (std: 0.0021)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.64), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3288 (std: 0.0020)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3285 (std: 0.0020)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.7999999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3286 (std: 0.0019)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3287 (std: 0.0019)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.96), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3290 (std: 0.0019)
+Testing combination 9/11: {'bw_adj_joint': np.float64(1.04), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3295 (std: 0.0018)
+Testing combination 10/11: {'bw_adj_joint': np.float64(1.1199999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3301 (std: 0.0018)
+Testing combination 11/11: {'bw_adj_joint': np.float64(1.2), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3308 (std: 0.0017)
+
+Best score: -2.3285 with params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.0922997428323512
+Saved models to models/gaussian_cluster_1_kde.pkl and models/gaussian_cluster_1_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 38.806484837911526
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 46
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_2d_gaussian_cluster_2
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3340 (std: 0.0030)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.48), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3329 (std: 0.0031)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.56), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3323 (std: 0.0032)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.64), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3319 (std: 0.0032)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3317 (std: 0.0032)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.7999999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3318 (std: 0.0031)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3320 (std: 0.0031)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.96), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3322 (std: 0.0031)
+Testing combination 9/11: {'bw_adj_joint': np.float64(1.04), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3327 (std: 0.0031)
+Testing combination 10/11: {'bw_adj_joint': np.float64(1.1199999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3333 (std: 0.0030)
+Testing combination 11/11: {'bw_adj_joint': np.float64(1.2), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3340 (std: 0.0030)
+
+Best score: -2.3317 with params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.09234303142893929
+Saved models to models/gaussian_cluster_2_kde.pkl and models/gaussian_cluster_2_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 38.420777869002976
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 45
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_4d_gaussian
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 5 parameter combinations...
+Testing combination 1/5: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+  -> Mean score: -3.8970 (std: 0.0028)
+Testing combination 2/5: {'bw_adj_joint': np.float64(0.6), 'kernel_type': 'gaussian'}
+  -> Mean score: -4.6244 (std: 0.0028)
+Testing combination 3/5: {'bw_adj_joint': np.float64(0.8), 'kernel_type': 'gaussian'}
+  -> Mean score: -4.6849 (std: 0.0028)
+Testing combination 4/5: {'bw_adj_joint': np.float64(1.0), 'kernel_type': 'gaussian'}
+  -> Mean score: -4.7008 (std: 0.0027)
+Testing combination 5/5: {'bw_adj_joint': np.float64(1.2), 'kernel_type': 'gaussian'}
+  -> Mean score: -4.7225 (std: 0.0025)
+
+Best score: -3.8970 with params: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.08571112126974298
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_4d_gaussian_independent12
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3327 (std: 0.0033)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.48), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3316 (std: 0.0030)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.56), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3309 (std: 0.0028)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.64), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3304 (std: 0.0026)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3301 (std: 0.0025)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.7999999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3301 (std: 0.0024)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3303 (std: 0.0024)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.96), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3306 (std: 0.0024)
+Testing combination 9/11: {'bw_adj_joint': np.float64(1.04), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3311 (std: 0.0023)
+Testing combination 10/11: {'bw_adj_joint': np.float64(1.1199999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3316 (std: 0.0022)
+Testing combination 11/11: {'bw_adj_joint': np.float64(1.2), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3324 (std: 0.0022)
+
+Best score: -2.3301 with params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.09232133517711985
+Saved models to models/gaussian_independent_set12_kde.pkl and models/gaussian_independent_set12_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 38.7805393739456
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 45
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_4d_gaussian_independent34
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.4), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3315 (std: 0.0028)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.48), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3304 (std: 0.0030)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.56), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3298 (std: 0.0032)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.64), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3293 (std: 0.0033)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3291 (std: 0.0032)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.7999999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3291 (std: 0.0032)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.8799999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3293 (std: 0.0032)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.96), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3296 (std: 0.0032)
+Testing combination 9/11: {'bw_adj_joint': np.float64(1.04), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3301 (std: 0.0032)
+Testing combination 10/11: {'bw_adj_joint': np.float64(1.1199999999999999), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3307 (std: 0.0032)
+Testing combination 11/11: {'bw_adj_joint': np.float64(1.2), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.3315 (std: 0.0032)
+
+Best score: -2.3291 with params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.72), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.09232133517711985
+Saved models to models/gaussian_independent_set34_kde.pkl and models/gaussian_independent_set34_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 38.452824181173504
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 45
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_rastrigin
+reading file...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.25), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.6752 (std: 0.0007)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.35), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.6826 (std: 0.0007)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.45), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.6903 (std: 0.0007)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.55), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.6982 (std: 0.0007)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.65), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7062 (std: 0.0006)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.75), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7143 (std: 0.0006)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.8500000000000001), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7226 (std: 0.0006)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.9500000000000001), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7309 (std: 0.0005)
+Testing combination 9/11: {'bw_adj_joint': np.float64(1.05), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7394 (std: 0.0005)
+Testing combination 10/11: {'bw_adj_joint': np.float64(1.15), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7479 (std: 0.0005)
+Testing combination 11/11: {'bw_adj_joint': np.float64(1.25), 'kernel_type': 'gaussian'}
+  -> Mean score: -2.7567 (std: 0.0005)
+
+Best score: -2.6752 with params: {'bw_adj_joint': np.float64(0.25), 'kernel_type': 'gaussian'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.25), 'kernel_type': 'gaussian'}
+generating joint distribution samples...
+Bandwidth: 0.025442879267234157
+Saved models to models/rastrigin_kde.pkl and models/rastrigin_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 66.45716735477087
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 180
+
+##########################
+
+python -m data_processing_scripts.gen_data data_config_muon_decay
+reading file...
+Applying min-max scaling...
+Performing Cross-Validation for Bandwidth Selection...
+Starting 5-fold cross-validation with 11 parameter combinations...
+Testing combination 1/11: {'bw_adj_joint': np.float64(0.1), 'kernel_type': 'tri'}
+  -> Mean score: 0.5440 (std: 0.0022)
+Testing combination 2/11: {'bw_adj_joint': np.float64(0.14), 'kernel_type': 'tri'}
+  -> Mean score: 0.5364 (std: 0.0022)
+Testing combination 3/11: {'bw_adj_joint': np.float64(0.18), 'kernel_type': 'tri'}
+  -> Mean score: 0.5284 (std: 0.0022)
+Testing combination 4/11: {'bw_adj_joint': np.float64(0.22), 'kernel_type': 'tri'}
+  -> Mean score: 0.5202 (std: 0.0022)
+Testing combination 5/11: {'bw_adj_joint': np.float64(0.26), 'kernel_type': 'tri'}
+  -> Mean score: 0.5117 (std: 0.0022)
+Testing combination 6/11: {'bw_adj_joint': np.float64(0.30000000000000004), 'kernel_type': 'tri'}
+  -> Mean score: 0.5030 (std: 0.0022)
+Testing combination 7/11: {'bw_adj_joint': np.float64(0.33999999999999997), 'kernel_type': 'tri'}
+  -> Mean score: 0.4941 (std: 0.0022)
+Testing combination 8/11: {'bw_adj_joint': np.float64(0.38), 'kernel_type': 'tri'}
+  -> Mean score: 0.4850 (std: 0.0022)
+Testing combination 9/11: {'bw_adj_joint': np.float64(0.42000000000000004), 'kernel_type': 'tri'}
+  -> Mean score: 0.4758 (std: 0.0022)
+Testing combination 10/11: {'bw_adj_joint': np.float64(0.45999999999999996), 'kernel_type': 'tri'}
+  -> Mean score: 0.4663 (std: 0.0022)
+Testing combination 11/11: {'bw_adj_joint': np.float64(0.5), 'kernel_type': 'tri'}
+  -> Mean score: 0.4567 (std: 0.0022)
+
+Best score: 0.5440 with params: {'bw_adj_joint': np.float64(0.1), 'kernel_type': 'tri'}
+Cross-Validation Complete. Best Params: {'bw_adj_joint': np.float64(0.1), 'kernel_type': 'tri'}
+generating joint distribution samples...
+Bandwidth: 0.011423466550875096
+Saved models to models/muon_decay_kde.pkl and models/muon_decay_kde_wrapped.pkl
+Wrapper verification successful: zgrid matches zgrid_wrapper.
+Density range scaling factor: 2.6967520737665374
+Using device: cpu
+DataLoader created for two_modal_samples_df with batch size 5000.
+Number of batches: 90
