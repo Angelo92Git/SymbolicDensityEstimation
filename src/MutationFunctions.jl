@@ -5,6 +5,7 @@ using DynamicExpressions:
     AbstractExpressionNode,
     AbstractExpression,
     AbstractNode,
+    Expression,
     NodeSampler,
     get_contents,
     with_contents,
@@ -18,7 +19,7 @@ using DynamicExpressions:
     max_degree
 using Statistics: median
 using ..CoreModule: AbstractOptions, DATA_TYPE, init_value, sample_value, Dataset
-using ..EvaluateInverseModule: eval_inverse_tree_array
+using ..EvaluateInverseModule: eval_inverse_tree_array, is_bad_array
 using ..SparseRegressionModule: fit_sparse_expression
 
 import ..CoreModule: mutate_value
@@ -635,95 +636,112 @@ function randomly_rotate_tree!(tree::AbstractExpressionNode, rng::AbstractRNG=de
     end
 end
 
-"""Invert tree at a random node, replacing it with a new subtree that fits the inverted values using sparse regression if possible, or a constant fallback if not."""
+"""
+Invert a random non-root node by solving for its target values, then replace it with
+a sparse-regression fit or a representative constant.
+
+!!! warning
+    This mutation is experimental and will change in minor version increments.
+"""
 function backsolve_rewrite_random_node(
     ex::AbstractExpression{T},
     dataset::Dataset{T},
     options::AbstractOptions,
     rng::AbstractRNG=default_rng();
-    population=nothing,
+    population_for_backsolve=nothing,
 ) where {T<:DATA_TYPE}
-    tree, context = get_contents_for_mutation(ex, rng)
-    new_tree = backsolve_rewrite_random_node(
-        tree, dataset, options, rng; population=population
+    throw(
+        ArgumentError(
+            "backsolve_rewrite_random_node does not support $(typeof(ex)); expression wrapper types must opt in explicitly.",
+        ),
     )
-    return with_contents_for_mutation(ex, new_tree, context)
 end
 
 function backsolve_rewrite_random_node(
-    tree::AbstractExpressionNode{T},
+    ex::Expression{T},
     dataset::Dataset{T},
     options::AbstractOptions,
     rng::AbstractRNG=default_rng();
-    population=nothing,
+    population_for_backsolve=nothing,
 ) where {T<:DATA_TYPE}
-    # Tree must have at least 2 nodes to perform inversion
-    length(tree) <= 1 && return tree
+    tree = get_contents(ex)
+    new_tree = backsolve_rewrite_random_node(
+        tree, dataset, options, rng; population_for_backsolve=population_for_backsolve
+    )
+    return with_contents(ex, new_tree)
+end
 
-    # Select a random node to invert at (excluding the root to maintain structure)
-    node_to_invert = rand(rng, NodeSampler(; tree, filter=t -> t !== tree))
+function backsolve_rewrite_random_node(
+    tree::AbstractExpressionNode{T,2},
+    dataset::Dataset{T},
+    options::AbstractOptions,
+    rng::AbstractRNG=default_rng();
+    population_for_backsolve=nothing,
+) where {T<:DATA_TYPE}
+    if !(T <: Union{AbstractFloat,Complex{<:AbstractFloat}})
+        throw(
+            ArgumentError(
+                "backsolve_rewrite_random_node only supports floating-point scalar types; got T=$(T).",
+            ),
+        )
+    end
 
-    # Perform inverse evaluation to get numerical values
-    inverted_values, success = eval_inverse_tree_array(
+    tree.degree == 0 && return tree
+
+    node_to_invert = rand(rng, NodeSampler(; tree, filter=Base.Fix2(!==, tree)))
+
+    target_values, success = eval_inverse_tree_array(
         tree, dataset.X, options.operators, node_to_invert, dataset.y
     )
 
-    # If inversion failed or produced invalid values, return original tree
-    if !success || any(isnan, inverted_values) || any(isinf, inverted_values)
+    if !success || is_bad_array(target_values)
         return tree
     end
 
-    # Try sparse regression if enabled
-    sr = options.sparse_regression
-    if sr.use
+    sparse_regression_options = options.sparse_regression
+    if sparse_regression_options.use
         nfeatures = size(dataset.X, 1)
         new_node = fit_sparse_expression(
             node_to_invert,
-            inverted_values,
+            target_values,
             dataset,
             options,
             nfeatures;
-            lambda=T(sr.lambda),
-            max_iter=sr.max_iter,
-            max_library_size=sr.max_library_size,
-            rng=rng,
-            validate=sr.validate,
-            max_mse=T(sr.max_mse),
-            population=population,
+            population_for_backsolve,
         )
 
-        # If sparse regression succeeded, use its result
         if new_node !== nothing
-            # Replace the target node in the tree
-            if node_to_invert === tree
-                return new_node
-            else
-                parent, idx = _find_parent(tree, node_to_invert)
-                set_child!(parent, new_node, idx)
-                return tree
-            end
+            parent, idx = _find_parent(tree, node_to_invert)
+            set_child!(parent, new_node, idx)
+            return tree
         end
-        # Otherwise fall through to median constant fallback
     end
 
-    # Fallback: Use median (for real types) or mean (for complex types) as representative value
     representative_val = if T <: Real
-        median(inverted_values)
+        median(target_values)
     else
-        sum(inverted_values) / length(inverted_values)
+        sum(target_values) / length(target_values)
     end
 
-    # Create a new constant node with the representative value
-    new_node = constructorof(typeof(tree))(T; val=T(representative_val))
+    new_node = constructorof(typeof(tree))(; val=T(representative_val))
 
-    # Replace the target node in the tree
-    if node_to_invert === tree
-        return new_node
-    else
-        parent, idx = _find_parent(tree, node_to_invert)
-        set_child!(parent, new_node, idx)
-        return tree
-    end
+    parent, idx = _find_parent(tree, node_to_invert)
+    set_child!(parent, new_node, idx)
+    return tree
+end
+
+function backsolve_rewrite_random_node(
+    tree::AbstractExpressionNode{T,D},
+    dataset::Dataset{T},
+    options::AbstractOptions,
+    rng::AbstractRNG=default_rng();
+    population_for_backsolve=nothing,
+) where {T<:DATA_TYPE,D}
+    throw(
+        ArgumentError(
+            "backsolve_rewrite_random_node only supports AbstractExpressionNode{T,2}; got $(typeof(tree)).",
+        ),
+    )
 end
 
 end

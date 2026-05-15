@@ -91,6 +91,7 @@ will be normalized to sum to 1.0 after initialization.
     performed at the end of an iteration for all individuals.
 - `backsolve_rewrite::Float64`: How often to backsolve and rewrite a random subtree
     by inverting the evaluation path and fitting a replacement expression.
+    **Experimental:** this mutation will change in minor version increments.
 - `form_connection::Float64`: **Only used for `GraphNode`, not regular `Node`**.
     Otherwise, this will automatically be set to 0.0. How often to form a
     connection between two nodes.

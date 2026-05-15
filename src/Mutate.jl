@@ -181,7 +181,7 @@ end
     running_search_statistics::RunningSearchStatistics,
     options::AbstractOptions;
     tmp_recorder::RecordType,
-    population=nothing,
+    population_for_backsolve=nothing,
 )::Tuple{
     P,Bool,Float64
 } where {T,L,D<:Dataset{T,L},N<:AbstractExpression{T},P<:AbstractPopMember{T,L,N}}
@@ -226,7 +226,7 @@ end
             parent_ref,
             curmaxsize,
             nfeatures,
-            population,
+            population_for_backsolve,
         )
         mutation_result::AbstractMutationResult{N,P}
         num_evals += mutation_result.num_evals::Float64
@@ -575,10 +575,12 @@ function mutate!(
     options::AbstractOptions;
     recorder::RecordType,
     dataset::Dataset,
-    population=nothing,
+    population_for_backsolve=nothing,
     kws...,
 ) where {N<:AbstractExpression,P<:AbstractPopMember}
-    tree = backsolve_rewrite_random_node(tree, dataset, options; population=population)
+    tree = backsolve_rewrite_random_node(
+        tree, dataset, options; population_for_backsolve=population_for_backsolve
+    )
     @recorder recorder["type"] = "backsolve_rewrite"
     return MutationResult{N,P}(; tree=tree)
 end
