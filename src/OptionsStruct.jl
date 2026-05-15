@@ -13,22 +13,23 @@ import ..MutationWeightsModule: AbstractMutationWeights
 
 Options for sparse regression (SINDy-style STLSQ) used by the `backsolve_rewrite` mutation.
 
+!!! warning
+    This option controls an experimental feature. The `backsolve_rewrite`
+    mutation and its sparse regression options will change in minor version
+    increments.
+
 # Arguments
 
-- `use::Bool`: Whether to enable sparse regression. Default: `false`.
+- `use::Bool`: Whether to enable sparse regression. Default: `true`.
 - `max_library_size::Int`: Maximum number of candidate library terms. Default: `500`.
 - `lambda::Float64`: STLSQ sparsity threshold. Default: `0.01`.
 - `max_iter::Int`: Maximum STLSQ iterations. Default: `10`.
-- `validate::Bool`: Whether to validate fit quality before accepting. Default: `false`.
-- `max_mse::Float64`: Rejection threshold when `validate=true`. Default: `Inf`.
 """
 Base.@kwdef struct SparseRegressionOptions
-    use::Bool = false
+    use::Bool = true
     max_library_size::Int = 500
     lambda::Float64 = 0.01
     max_iter::Int = 10
-    validate::Bool = false
-    max_mse::Float64 = Inf
 end
 
 """

@@ -613,7 +613,7 @@ $(OPTION_DESCRIPTIONS)
     probability_negate_constant::Union{Real,Nothing}=nothing,
     skip_mutation_failures::Bool=true,
     ## Sparse Regression (for backsolve_rewrite mutation):
-    sparse_regression::SparseRegressionOptions=SparseRegressionOptions(),
+    sparse_regression::Union{SparseRegressionOptions,Nothing}=nothing,
     ## 6. Tournament Selection
     ## 7. Constant Optimization:
     optimizer_algorithm::Union{AbstractString,Optim.AbstractOptimizer}=Optim.BFGS(;
@@ -1010,6 +1010,7 @@ $(OPTION_DESCRIPTIONS)
     end
 
     set_mutation_weights = create_mutation_weights(mutation_weights)
+    sparse_regression = something(sparse_regression, SparseRegressionOptions(; use=false))
 
     @assert print_precision > 0
 
