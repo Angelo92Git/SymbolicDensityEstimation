@@ -22,6 +22,10 @@ for utility in mutation operators that can use information about inverse
 functions to improve the search space.
 
 The default behavior for operators is to use InverseFunctions.jl.
+
+!!! warning
+    This API supports an experimental mutation and will change in minor version
+    increments.
 """
 function approx_inverse(f::F) where {F<:Function}
     i_f = InverseFunctions.inverse(f)
