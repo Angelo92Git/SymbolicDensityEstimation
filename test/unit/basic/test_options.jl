@@ -27,6 +27,15 @@
     @test_throws AssertionError Options(; loss_scale=:cubic)
 end
 
+@testitem "Test sparse regression options" begin
+    using SymbolicRegression
+
+    @test !Options().sparse_regression.use
+    @test !Options(; sparse_regression=nothing).sparse_regression.use
+    @test Options(; sparse_regression=SparseRegressionOptions()).sparse_regression.use
+    @test !Options(; sparse_regression=SparseRegressionOptions(; use=false)).sparse_regression.use
+end
+
 @testitem "Test operators parameter conflicts" begin
     using SymbolicRegression
     using DynamicExpressions: OperatorEnum
