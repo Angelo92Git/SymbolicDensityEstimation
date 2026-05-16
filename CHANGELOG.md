@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.0-alpha.11](https://github.com/Angelo92Git/SymbolicDensityEstimation/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2026-05-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* cost after simplification must be recomputed ([#550](https://github.com/Angelo92Git/SymbolicDensityEstimation/issues/550))
+
+### Features
+
+* add atan to ValidVector unary operators ([#546](https://github.com/Angelo92Git/SymbolicDensityEstimation/issues/546)) ([5a9d08c](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/5a9d08c33022f241db321479ca5947c14e991bec))
+* add backsolve mutation ([de86fef](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/de86fef0dc6e99cee05d2e80969ab0d0e0016907))
+* add backsolve rewrite mutation ([a7eb486](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/a7eb486a09e39cd7667006940092a787f889dc50))
+* add inverse evaluation helpers ([f2153f2](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/f2153f28b0f840b20d24103d036a03e557740f42))
+* add sparse regression library for backsolve ([f9cc312](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/f9cc3126e57ee99f8311104bc59ff479730919b3))
+
+
+### Bug Fixes
+
+* apply inverse-function review suggestions ([d035318](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/d035318a7fce923d74407c963ed7af3a679b6c11))
+* cost after simplification must be recomputed ([#550](https://github.com/Angelo92Git/SymbolicDensityEstimation/issues/550)) ([7d87479](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/7d8747918f3f35effcc6eaa3d27f9340266819bb))
+* harden sparse regression library ([46a1ad2](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/46a1ad2972c11f00969139c1b687a26ff976907a))
+* import sparse regression options and format code ([00d99ac](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/00d99ac8b108fb9f74f17e4e68e4bdb8461dc988))
+* import sparse regression options in MLJ interface ([cb5f8bc](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/cb5f8bc11009bfc1664328a0262f4470e724667c))
+* import sparse regression options in top-level module ([dcc7f5e](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/dcc7f5e9bbe2b10068432904d39b0fec3f2ba2e1))
+* use scalar type rather than leaf type for randn ([#570](https://github.com/Angelo92Git/SymbolicDensityEstimation/issues/570)) ([9c6460e](https://github.com/Angelo92Git/SymbolicDensityEstimation/commit/9c6460e3fbd151e891b0bae926fa4913dc7ff787))
+
 ## [2.0.0-alpha.10](https://github.com/astroautomata/SymbolicRegression.jl/compare/v2.0.0-alpha.9...v2.0.0-alpha.10) (2026-03-23)
 
 ### ⚠ BREAKING CHANGES
