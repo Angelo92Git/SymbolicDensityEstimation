@@ -42,6 +42,7 @@ jobs:
           - dataset
           - parallel
           - precompile
+          - backsolve
           - misc
         exclude:
           # Only run Julia 1.10 on ubuntu
