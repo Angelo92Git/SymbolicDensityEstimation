@@ -1,6 +1,6 @@
 @testitem "STLSQ algorithm basic functionality" tags = [:part1] begin
     using SymbolicRegression
-    using SymbolicRegression.SparseRegressionModule: stlsq
+    using SymbolicRegression.BacksolveModule: stlsq
     using LinearAlgebra: norm
 
     theta = Float64[
@@ -63,7 +63,7 @@ end
 
 @testitem "Tree combination with weighted sum" tags = [:part1] begin
     using SymbolicRegression
-    using SymbolicRegression.SparseRegressionModule: combine_trees_weighted_sum
+    using SymbolicRegression.BacksolveModule: combine_trees_weighted_sum
     using DynamicExpressions: Node, eval_tree_array
 
     options = Options(; binary_operators=(+, *), unary_operators=(sin,))
@@ -127,7 +127,7 @@ end
 
 @testitem "Fit sparse expression full pipeline" tags = [:part1] begin
     using SymbolicRegression
-    using SymbolicRegression.SparseRegressionModule: fit_sparse_expression
+    using SymbolicRegression.BacksolveModule: fit_sparse_expression
     using DynamicExpressions: Node, eval_tree_array
 
     mutable struct ValidationFlipMatrix <: AbstractMatrix{Float64}
@@ -178,9 +178,9 @@ end
     @test result_invalid === nothing
 end
 
-@testitem "build_adaptive_library" tags = [:part1] begin
+@testitem "build_basis_library" tags = [:part1] begin
     using SymbolicRegression
-    using SymbolicRegression.SparseRegressionModule: BasisLibrary, build_adaptive_library
+    using SymbolicRegression.BacksolveModule: BasisLibrary, build_basis_library
     using DynamicExpressions: Node, eval_tree_array, string_tree
 
     options = Options(; binary_operators=(+, *, -), unary_operators=(sin, cos))
@@ -192,11 +192,11 @@ end
     nfeatures = 2
 
     @test_throws ArgumentError BasisLibrary([tree_prototype], zeros(Float64, 4, 2))
-    @test_throws ArgumentError build_adaptive_library(
+    @test_throws ArgumentError build_basis_library(
         tree_prototype, dataset, options, nfeatures, nothing; max_library_size=2
     )
 
-    basis = build_adaptive_library(
+    basis = build_basis_library(
         tree_prototype, dataset, options, nfeatures, nothing; max_library_size=200
     )
 
@@ -217,7 +217,7 @@ end
 
     pop = Population([member(tree1, 1.0), member(tree2, 2.0), member(tree3, 3.0)])
 
-    basis2 = build_adaptive_library(
+    basis2 = build_basis_library(
         tree_prototype, dataset, options, nfeatures, pop; max_library_size=200
     )
 
@@ -225,7 +225,7 @@ end
     @test size(basis2.evaluated_terms, 2) == length(basis2.terms)
 
     raw_pop = (members=[(loss=0.1, tree=tree1)], n=1)
-    basis_raw = build_adaptive_library(
+    basis_raw = build_basis_library(
         tree_prototype, dataset, options, nfeatures, raw_pop; max_library_size=200
     )
 
@@ -236,12 +236,12 @@ end
     member_d2 = member(Node(1, Node(Float64; feature=1), Node(Float64; feature=2)), 2.0)
     pop_dup = Population([member_d1, member_d2])
 
-    basis_dup = build_adaptive_library(
+    basis_dup = build_basis_library(
         tree_prototype, dataset, options, nfeatures, pop_dup; max_library_size=200
     )
 
     pop_single = Population([member_d1])
-    basis_single = build_adaptive_library(
+    basis_single = build_basis_library(
         tree_prototype, dataset, options, nfeatures, pop_single; max_library_size=200
     )
 
@@ -249,11 +249,11 @@ end
 
     pop_topk = Population([member(tree1, 10.0), member(tree2, 10.0), member(tree3, 0.1)])
 
-    basis_topk = build_adaptive_library(
+    basis_topk = build_basis_library(
         tree_prototype, dataset, options, nfeatures, pop_topk; max_library_size=200, top_k=1
     )
 
-    basis_all = build_adaptive_library(
+    basis_all = build_basis_library(
         tree_prototype,
         dataset,
         options,
@@ -264,7 +264,7 @@ end
     )
     @test length(basis_topk.terms) <= length(basis_all.terms)
 
-    basis_capped = build_adaptive_library(
+    basis_capped = build_basis_library(
         tree_prototype, dataset, options, nfeatures, pop; max_library_size=4, top_k=10
     )
 
@@ -273,7 +273,7 @@ end
 
 @testitem "fit_sparse_expression with population_for_backsolve" tags = [:part1] begin
     using SymbolicRegression
-    using SymbolicRegression.SparseRegressionModule: fit_sparse_expression
+    using SymbolicRegression.BacksolveModule: fit_sparse_expression
     using DynamicExpressions: Node, eval_tree_array
 
     options = Options(;
@@ -310,7 +310,7 @@ end
     @test mse < 1.0
 end
 
-@testitem "Integration test: inverse mutation with sparse regression" tags = [:part2] begin
+@testitem "Integration test: backsolve rewrite with sparse fit" tags = [:part2] begin
     using SymbolicRegression
     using SymbolicRegression.MutationFunctionsModule: backsolve_rewrite_random_node
     using DynamicExpressions: Node, eval_tree_array
@@ -365,7 +365,7 @@ end
 
 @testitem "Edge cases and error handling" tags = [:part1] begin
     using SymbolicRegression
-    using SymbolicRegression.SparseRegressionModule: stlsq, fit_sparse_expression
+    using SymbolicRegression.BacksolveModule: stlsq, fit_sparse_expression
     using DynamicExpressions: Node
 
     options_empty = Options(;

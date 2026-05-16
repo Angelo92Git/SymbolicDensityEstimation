@@ -1,4 +1,4 @@
-module SparseRegressionModule
+module BacksolveModule
 
 using LinearAlgebra: SingularException, norm, pinv
 using DispatchDoctor: @unstable
@@ -23,7 +23,7 @@ end
 """
     BasisLibrary(terms::Vector{N}, evaluated_terms::Matrix{T})
 
-Basis terms and their evaluated values for sparse regression.
+Basis terms and their evaluated values for the sparse-expression fit.
 """
 struct BasisLibrary{T,N<:AbstractExpressionNode{T}}
     terms::Vector{N}
@@ -103,7 +103,7 @@ function stlsq(
 end
 
 """
-    build_adaptive_library(
+    build_basis_library(
         tree_prototype::AbstractExpressionNode{T},
         dataset::Dataset{T},
         options::AbstractOptions,
@@ -113,7 +113,7 @@ end
         top_k::Int=10
     ) -> BasisLibrary
 
-Build a sparse-regression basis from seed terms and population subtrees.
+Build a basis library from seed terms and population subtrees.
 
 !!! warning
     This API supports an experimental mutation and will change in minor version
@@ -132,7 +132,7 @@ Build a sparse-regression basis from seed terms and population subtrees.
 # Returns
 - `BasisLibrary`: Basis terms and their evaluated values
 """
-function build_adaptive_library(
+function build_basis_library(
     tree_prototype::AbstractExpressionNode{T},
     dataset::Dataset{T},
     options::AbstractOptions,
@@ -145,7 +145,7 @@ function build_adaptive_library(
     if max_library_size < min_library_size
         throw(
             ArgumentError(
-                "build_adaptive_library requires max_library_size >= 1 + nfeatures; got max_library_size=$(max_library_size), nfeatures=$(nfeatures).",
+                "build_basis_library requires max_library_size >= 1 + nfeatures; got max_library_size=$(max_library_size), nfeatures=$(nfeatures).",
             ),
         )
     end
@@ -308,7 +308,7 @@ operator set, since the output is structurally a weighted sum.
 - `dataset`: Dataset containing input features
 - `options`: Options containing operator definitions and backsolve configuration
 - `nfeatures`: Number of input features
-- `population_for_backsolve`: Optional population used to extract adaptive basis
+- `population_for_backsolve`: Optional population used to extract basis
   terms for the backsolve mutation.
 
 # Returns
@@ -325,7 +325,7 @@ operator set, since the output is structurally a weighted sum.
     _has_weighted_sum_operators(options) || return nothing
     backsolve_options = options.backsolve
 
-    basis = build_adaptive_library(
+    basis = build_basis_library(
         tree_prototype,
         dataset,
         options,

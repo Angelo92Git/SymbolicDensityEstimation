@@ -1,4 +1,4 @@
-@testitem "Test inverse mutation" tags = [:part1] begin
+@testitem "Test backsolve mutation" tags = [:part1] begin
     using SymbolicRegression
     using SymbolicRegression.InverseFunctionsModule: approx_inverse
     using SymbolicRegression.EvaluateInverseModule:

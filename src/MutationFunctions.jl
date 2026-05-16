@@ -20,7 +20,7 @@ using DynamicExpressions:
 using Statistics: median
 using ..CoreModule: AbstractOptions, DATA_TYPE, init_value, sample_value, Dataset
 using ..EvaluateInverseModule: eval_inverse_tree_array, is_bad_array
-using ..SparseRegressionModule: fit_sparse_expression
+using ..BacksolveModule: fit_sparse_expression
 
 import ..CoreModule: mutate_value
 
@@ -638,7 +638,7 @@ end
 
 """
 Invert a random non-root node by solving for its target values, then replace it with
-a sparse-regression fit or a representative constant.
+a sparse-expression fit or a representative constant.
 
 !!! warning
     This mutation is experimental and will change in minor version increments.

@@ -216,7 +216,7 @@ using DispatchDoctor: @stable
     include("AdaptiveParsimony.jl")
     include("InverseFunctions.jl")
     include("EvaluateInverse.jl")
-    include("SparseRegression.jl")
+    include("Backsolve.jl")
     include("MutationFunctions.jl")
     include("LossFunctions.jl")
     include("PopMember.jl")
