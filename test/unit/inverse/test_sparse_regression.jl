@@ -146,7 +146,7 @@ end
     make_options(; kws...) = Options(;
         binary_operators=(+, *),
         unary_operators=(sin, cos),
-        sparse_regression=SparseRegressionOptions(;
+        backsolve=BacksolveOptions(;
             lambda=0.01, max_iter=10, max_library_size=500, kws...
         ),
     )
@@ -279,9 +279,7 @@ end
     options = Options(;
         binary_operators=(+, *),
         unary_operators=(sin, cos),
-        sparse_regression=SparseRegressionOptions(;
-            lambda=0.01, max_iter=10, max_library_size=500
-        ),
+        backsolve=BacksolveOptions(; lambda=0.01, max_iter=10, max_library_size=500),
     )
 
     X = Float64[1.0 2.0 3.0 4.0; 0.5 1.0 1.5 2.0]  # 2 features x 4 samples
@@ -321,7 +319,7 @@ end
     sr_options(; use) = Options(;
         binary_operators=(+, *, -),
         unary_operators=(sin, cos),
-        sparse_regression=SparseRegressionOptions(;
+        backsolve=BacksolveOptions(;
             use=use, lambda=0.01, max_iter=10, max_library_size=500
         ),
     )
@@ -373,7 +371,7 @@ end
     options_empty = Options(;
         binary_operators=(),
         unary_operators=(),
-        sparse_regression=SparseRegressionOptions(; lambda=0.01, max_iter=10),
+        backsolve=BacksolveOptions(; lambda=0.01, max_iter=10),
     )
 
     X = Float64[1.0 2.0 3.0]
@@ -388,7 +386,7 @@ end
     make_options(; kws...) = Options(;
         binary_operators=(+, *),
         unary_operators=(sin,),
-        sparse_regression=SparseRegressionOptions(; kws...),
+        backsolve=BacksolveOptions(; kws...),
     )
     options = make_options(; lambda=1e10, max_iter=10)
 

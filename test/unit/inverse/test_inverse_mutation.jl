@@ -250,7 +250,7 @@
         options = Options(;
             binary_operators=(+, *),
             unary_operators=(),
-            sparse_regression=SparseRegressionOptions(; use=false),
+            backsolve=BacksolveOptions(; use=false),
         )
 
         tree = Node(1, Node(ComplexF64; feature=1), Node(ComplexF64; val=1 + 0im))

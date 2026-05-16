@@ -698,8 +698,8 @@ function backsolve_rewrite_random_node(
         return tree
     end
 
-    sparse_regression_options = options.sparse_regression
-    if sparse_regression_options.use
+    backsolve_options = options.backsolve
+    if backsolve_options.use
         nfeatures = size(dataset.X, 1)
         new_node = fit_sparse_expression(
             node_to_invert,

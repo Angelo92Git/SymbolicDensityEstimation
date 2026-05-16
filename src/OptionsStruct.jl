@@ -9,23 +9,22 @@ using LossFunctions: SupervisedLoss
 import ..MutationWeightsModule: AbstractMutationWeights
 
 """
-    SparseRegressionOptions(;kws...)
+    BacksolveOptions(;kws...)
 
-Options for sparse regression (SINDy-style STLSQ) used by the `backsolve_rewrite` mutation.
+Options for the `backsolve_rewrite` mutation sparse-expression fit.
 
 !!! warning
     This option controls an experimental feature. The `backsolve_rewrite`
-    mutation and its sparse regression options will change in minor version
-    increments.
+    mutation and `BacksolveOptions` will change in minor version increments.
 
 # Arguments
 
-- `use::Bool`: Whether to enable sparse regression. Default: `true`.
+- `use::Bool`: Whether to enable the sparse-expression fit. Default: `true`.
 - `max_library_size::Int`: Maximum number of candidate library terms. Default: `500`.
 - `lambda::Float64`: STLSQ sparsity threshold. Default: `0.01`.
 - `max_iter::Int`: Maximum STLSQ iterations. Default: `10`.
 """
-Base.@kwdef struct SparseRegressionOptions
+Base.@kwdef struct BacksolveOptions
     use::Bool = true
     max_library_size::Int = 500
     lambda::Float64 = 0.01
@@ -282,7 +281,7 @@ struct Options{
     define_helper_functions::Bool
     use_recorder::Bool
     popmember_type::Type{PM}
-    sparse_regression::SparseRegressionOptions
+    backsolve::BacksolveOptions
 end
 
 function Base.print(io::IO, @nospecialize(options::Options))
@@ -295,10 +294,7 @@ function Base.print(io::IO, @nospecialize(options::Options))
         join(
             [
                 if fieldname in (
-                    :optimizer_algorithm,
-                    :optimizer_options,
-                    :mutation_weights,
-                    :sparse_regression,
+                    :optimizer_algorithm, :optimizer_options, :mutation_weights, :backsolve
                 )
                     "$(fieldname)=..."
                 else

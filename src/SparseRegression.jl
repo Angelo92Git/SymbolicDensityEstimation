@@ -293,7 +293,7 @@ end
         population_for_backsolve=nothing
     ) -> Union{AbstractExpressionNode{T}, Nothing}
 
-Fit a sparse symbolic expression to target values.
+Fit a sparse expression to backsolved target values.
 
 !!! warning
     This API supports an experimental mutation and will change in minor version
@@ -306,7 +306,7 @@ operator set, since the output is structurally a weighted sum.
 - `tree_prototype`: Prototype node for creating trees
 - `target_values`: Target values to fit
 - `dataset`: Dataset containing input features
-- `options`: Options containing operator definitions and sparse regression configuration
+- `options`: Options containing operator definitions and backsolve configuration
 - `nfeatures`: Number of input features
 - `population_for_backsolve`: Optional population used to extract adaptive basis
   terms for the backsolve mutation.
@@ -323,7 +323,7 @@ operator set, since the output is structurally a weighted sum.
     population_for_backsolve=nothing,
 ) where {T<:STLSQ_DATA_TYPE}
     _has_weighted_sum_operators(options) || return nothing
-    sparse_regression_options = options.sparse_regression
+    backsolve_options = options.backsolve
 
     basis = build_adaptive_library(
         tree_prototype,
@@ -331,14 +331,14 @@ operator set, since the output is structurally a weighted sum.
         options,
         nfeatures,
         population_for_backsolve;
-        max_library_size=sparse_regression_options.max_library_size,
+        max_library_size=backsolve_options.max_library_size,
     )
 
     coefficients, stlsq_success = stlsq(
         basis.evaluated_terms,
         target_values;
-        lambda=sparse_regression_options.lambda,
-        max_iter=sparse_regression_options.max_iter,
+        lambda=backsolve_options.lambda,
+        max_iter=backsolve_options.max_iter,
     )
 
     if !stlsq_success
