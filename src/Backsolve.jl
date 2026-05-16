@@ -204,9 +204,7 @@ function build_basis_library(
 end
 
 function _has_weighted_sum_operators(options::AbstractOptions)::Bool
-    add_idx = findfirst(op -> op === (+), options.operators.binops)
-    mult_idx = findfirst(op -> op === (*), options.operators.binops)
-    return add_idx !== nothing && mult_idx !== nothing
+    return (+) in options.operators.binops && (*) in options.operators.binops
 end
 
 """
