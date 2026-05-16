@@ -698,23 +698,15 @@ function backsolve_rewrite_random_node(
         return tree
     end
 
-    backsolve_options = options.backsolve
-    if backsolve_options.use
-        nfeatures = size(dataset.X, 1)
-        new_node = fit_sparse_expression(
-            node_to_invert,
-            target_values,
-            dataset,
-            options,
-            nfeatures;
-            population_for_backsolve,
-        )
+    nfeatures = size(dataset.X, 1)
+    new_node = fit_sparse_expression(
+        node_to_invert, target_values, dataset, options, nfeatures; population_for_backsolve
+    )
 
-        if new_node !== nothing
-            parent, idx = _find_parent(tree, node_to_invert)
-            set_child!(parent, new_node, idx)
-            return tree
-        end
+    if new_node !== nothing
+        parent, idx = _find_parent(tree, node_to_invert)
+        set_child!(parent, new_node, idx)
+        return tree
     end
 
     representative_val = if T <: Real

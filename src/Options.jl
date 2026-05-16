@@ -1009,7 +1009,7 @@ $(OPTION_DESCRIPTIONS)
     end
 
     set_mutation_weights = create_mutation_weights(mutation_weights)
-    backsolve = something(backsolve, BacksolveOptions(; use=false))
+    backsolve = something(backsolve, BacksolveOptions())
 
     @assert print_precision > 0
 

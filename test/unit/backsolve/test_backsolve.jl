@@ -316,18 +316,16 @@ end
     using DynamicExpressions: Node, eval_tree_array
     using Random: MersenneTwister
 
-    sr_options(; use) = Options(;
+    sr_options() = Options(;
         binary_operators=(+, *, -),
         unary_operators=(sin, cos),
-        backsolve=BacksolveOptions(;
-            use=use, lambda=0.01, max_iter=10, max_library_size=500
-        ),
+        backsolve=BacksolveOptions(; lambda=0.01, max_iter=10, max_library_size=500),
     )
 
     X = Float64[1.0 2.0 3.0 4.0; 0.5 1.0 1.5 2.0]  # 2 features x 4 samples
     y = Float64[3.5, 7.0, 10.5, 14.0]
     dataset = Dataset(X, y)
-    options = sr_options(; use=true)
+    options = sr_options()
 
     x1 = Node(Float64; feature=1)
     x2 = Node(Float64; feature=2)
@@ -343,15 +341,6 @@ end
     @test mutated_tree !== nothing
     new_vals, _ = eval_tree_array(mutated_tree, X, options.operators)
     @test new_vals != orig_vals
-
-    options_no_sparse = sr_options(; use=false)
-
-    orig_vals2, _ = eval_tree_array(copy(tree), X, options_no_sparse.operators)
-    mutated_tree2 = backsolve_rewrite_random_node(tree, dataset, options_no_sparse, rng)
-
-    @test mutated_tree2 !== nothing
-    new_vals2, _ = eval_tree_array(mutated_tree2, X, options_no_sparse.operators)
-    @test new_vals2 != orig_vals2
 
     simple_tree = Node(Float64; feature=1)
     simple_copy = copy(simple_tree)

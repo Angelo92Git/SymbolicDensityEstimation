@@ -30,10 +30,9 @@ end
 @testitem "Test backsolve options" begin
     using SymbolicRegression
 
-    @test !Options().backsolve.use
-    @test !Options(; backsolve=nothing).backsolve.use
-    @test Options(; backsolve=BacksolveOptions()).backsolve.use
-    @test !Options(; backsolve=BacksolveOptions(; use=false)).backsolve.use
+    @test Options().backsolve == BacksolveOptions()
+    @test Options(; backsolve=nothing).backsolve == BacksolveOptions()
+    @test Options(; backsolve=BacksolveOptions(; lambda=0.2)).backsolve.lambda == 0.2
 end
 
 @testitem "Test operators parameter conflicts" begin

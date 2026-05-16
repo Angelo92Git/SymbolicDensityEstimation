@@ -19,13 +19,11 @@ Options for the `backsolve_rewrite` mutation sparse-expression fit.
 
 # Arguments
 
-- `use::Bool`: Whether to enable the sparse-expression fit. Default: `true`.
 - `max_library_size::Int`: Maximum number of candidate library terms. Default: `500`.
 - `lambda::Float64`: STLSQ sparsity threshold. Default: `0.01`.
 - `max_iter::Int`: Maximum STLSQ iterations. Default: `10`.
 """
 Base.@kwdef struct BacksolveOptions
-    use::Bool = true
     max_library_size::Int = 500
     lambda::Float64 = 0.01
     max_iter::Int = 10

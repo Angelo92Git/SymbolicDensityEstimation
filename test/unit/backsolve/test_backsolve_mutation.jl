@@ -242,16 +242,12 @@
         @test mutated_tree !== nothing
     end
 
-    @testset "backsolve_rewrite_random_node - Complex fallback" begin
+    @testset "backsolve_rewrite_random_node - Complex constant fallback" begin
         X = reshape(ComplexF64[1 + im, 2 - im, 3 + 2im], 1, 3)
         y = ComplexF64[2 + 2im, 3 - im, 4 + 0im]
         dataset = Dataset(X, y)
 
-        options = Options(;
-            binary_operators=(+, *),
-            unary_operators=(),
-            backsolve=BacksolveOptions(; use=false),
-        )
+        options = Options(; binary_operators=(+,), unary_operators=())
 
         tree = Node(1, Node(ComplexF64; feature=1), Node(ComplexF64; val=1 + 0im))
         mutated_tree = backsolve_rewrite_random_node(tree, dataset, options, rng)
